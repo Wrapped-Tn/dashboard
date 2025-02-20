@@ -1,12 +1,12 @@
-// docs https://github.com/azouaoui-med/react-pro-sidebar
+
 import { useState } from "react";
 import { Menu, Sidebar, MenuItem } from "react-pro-sidebar";
 import { useProSidebar } from "react-pro-sidebar";
 
-import { useSidebarContext } from "./sidebarContext";
+import { useSidebarContext } from "./sidebarContextF";
 
 import { Link } from "react-router-dom";
-import { tokens } from "../../../theme";
+import { tokens } from "../../../../theme";
 import { useTheme, Box, Typography, IconButton } from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
 import PeopleOutlinedIcon from "@mui/icons-material/PeopleOutlined";
@@ -20,7 +20,6 @@ import PieChartOutlineOutlinedIcon from "@mui/icons-material/PieChartOutlineOutl
 import EmailIcon from '@mui/icons-material/Email';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import ListAltIcon from '@mui/icons-material/ListAlt';
-
 
 import TimelineOutlinedIcon from "@mui/icons-material/TimelineOutlined";
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
@@ -118,7 +117,7 @@ const MyProSidebar = () => {
                 ml="15px"
               >
                 <Typography variant="h3" color={colors.grey[100]}>
-                  ADMINIS
+                  Finance Manager
                 </Typography>
                 <IconButton
                   onClick={
@@ -165,8 +164,8 @@ const MyProSidebar = () => {
           )}
           <Box paddingLeft={collapsed ? undefined : "10%"}>
             <Item
-              title="Dashboard"
-              to="/"
+              title="DashboardF"
+              to="/dashF"
               icon={<HomeOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -181,28 +180,28 @@ const MyProSidebar = () => {
             </Typography>
             <Item
               title="Email"
-              to="/team"
+              to="/teamF"
               icon={<EmailIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="user"
-              to="/contacts"
+              to="/contactsF"
               icon={<PeopleOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
               title="livraison"
-              to="/invoices"
+              to="/invoicesF"
               icon={<LocalShippingIcon />}
               selected={selected}
               setSelected={setSelected}
             />
              <Item
               title="Demande"
-              to="/Dem"
+              to="/teamF"
               icon={<ListAltIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -221,17 +220,17 @@ const MyProSidebar = () => {
               icon={<PersonOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            /> */}
-            {/* <Item
+            />
+            <Item
               title="Calendar"
               to="/calendar"
               icon={<CalendarTodayOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            /> */}
-            {/* <Item
+            />
+            <Item
               title="FAQ Page"
-              to="/faqL"
+              to="/faq"
               icon={<HelpOutlineOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
@@ -257,21 +256,21 @@ const MyProSidebar = () => {
               icon={<PieChartOutlineOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            /> */}
+            />
             <Item
-              title="DashL"
-              to="/DashL"
+              title="Line Chart"
+              to="/line"
               icon={<TimelineOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
             />
             <Item
-              title="DashF"
-              to="/dashF"
+              title="Geography Chart"
+              to="/geography"
               icon={<MapOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            />
+            /> */}
           </Box>
         </Menu>
       </Sidebar>
