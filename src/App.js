@@ -49,10 +49,7 @@ const App = () => {
     <ColorModeContext.Provider value={colorMode}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <MyProSidebarProvider>
-          <div style={{ height: "100%", width: "100%" }}>
-            <main>
-              <Topbar />
+        
               <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/team" element={<Team />} />
@@ -91,9 +88,7 @@ const App = () => {
                 <Route path="/calendarL" element={<CalendarL />} />
                 <Route path="/geographyL" element={<GeographyL />} />
               </Routes>
-            </main>
-          </div>
-        </MyProSidebarProvider>
+           
       </ThemeProvider>
     </ColorModeContext.Provider>
   );

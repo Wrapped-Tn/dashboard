@@ -20,12 +20,18 @@ import LineChart from "../../../components/LineChart";
 // import BarChart from "../../../components/BarChart";
 import StatBox from "../../../components/StatBox";
 // import ProgressCircle from "../../../components/ProgressCircle";
+import { MyProSidebarProviderF } from "../global/sidebar/sidebarContextF";
+import Topbar from "../global/Topbar";
 
 const Dashboard = () => {
   const theme = useTheme();
   const smScreen = useMediaQuery(theme.breakpoints.up("sm"));
   const colors = tokens(theme.palette.mode);
   return (
+    <MyProSidebarProviderF>
+          <div style={{ height: "100%", width: "100%" }}>
+            <main>
+              <Topbar />
     <Box m="20px">
       {/* HEADER */}
 
@@ -302,6 +308,9 @@ const Dashboard = () => {
         </Grid>
       </Grid>
     </Box>
+    </main>
+    </div>
+  </MyProSidebarProviderF> 
   );
 };
 

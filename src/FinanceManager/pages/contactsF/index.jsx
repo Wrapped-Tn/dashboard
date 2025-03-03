@@ -3,8 +3,9 @@ import { Box, useTheme } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../../theme";
 import { mockDataContacts } from "../../../data/mockData";
-
 import Header from "../../../components/Header";
+import { MyProSidebarProviderF } from "../global/sidebar/sidebarContextF";
+import Topbar from "../global/Topbar";
 
 const Contacts = () => {
   const theme = useTheme();
@@ -33,6 +34,10 @@ const Contacts = () => {
     { field: "zipCode", headerName: "Zip Code", width: 100 },
   ];
   return (
+    <MyProSidebarProviderF>
+    <div style={{ height: "100%", width: "100%" }}>
+      <main>
+        <Topbar />
     <Box m="20px">
       <Box display="flex" justifyContent="space-between" alignItems="center">
         <Header title="CONTACTS" subtitle="welcome to you Contacts" />
@@ -77,6 +82,9 @@ const Contacts = () => {
         />
       </Box>
     </Box>
+    </main>
+    </div>
+    </MyProSidebarProviderF>
   );
 };
 

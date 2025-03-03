@@ -20,12 +20,19 @@ import GeographyChart from "../../components/GeographyChart";
 import BarChart from "../../components/BarChart";
 import StatBox from "../../components/StatBox";
 import ProgressCircle from "../../components/ProgressCircle";
+import { MyProSidebarProvider } from "../global/sidebar/sidebarContext";
+
+import Topbar from "../global/Topbar";
 
 const Dashboard = () => {
   const theme = useTheme();
   const smScreen = useMediaQuery(theme.breakpoints.up("sm"));
   const colors = tokens(theme.palette.mode);
   return (
+    <MyProSidebarProvider>
+          <div style={{ height: "100%", width: "100%" }}>
+            <main>
+              <Topbar />
     <Box m="20px">
       {/* HEADER */}
 
@@ -302,6 +309,9 @@ const Dashboard = () => {
         </Grid>
       </Grid>
     </Box>
+   </main>
+   </div>
+   </MyProSidebarProvider> 
   );
 };
 

@@ -20,12 +20,18 @@ import GeographyChart from "../../../components/GeographyChart";
 import BarChart from "../../../components/BarChart";
 import StatBox from "../../../components/StatBox";
 import ProgressCircle from "../../../components/ProgressCircle";
+import { MyProSidebarProviderL } from "../global/sidebar/sidebarContextL";
+import Topbar from "../global/Topbar";
 
 const Dashboard = () => {
   const theme = useTheme();
   const smScreen = useMediaQuery(theme.breakpoints.up("sm"));
   const colors = tokens(theme.palette.mode);
   return (
+    <MyProSidebarProviderL>
+    <div style={{ height: "100%", width: "100%" }}>
+      <main>
+        <Topbar />
     <Box m="20px">
       {/* HEADER */}
 
@@ -36,10 +42,10 @@ const Dashboard = () => {
         alignItems={smScreen ? "center" : "start"}
         m="10px 0"
       >
-        <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
+        <Header title="Livraison Manager " subtitle="Welcome to your dashboard" />
 
         <Box>
-          <Button
+          {/* <Button
             sx={{
               backgroundColor: colors.blueAccent[700],
               color: colors.grey[100],
@@ -50,13 +56,13 @@ const Dashboard = () => {
           >
             <DownloadOutlinedIcon sx={{ mr: "10px" }} />
             Download Reports
-          </Button>
+          </Button> */}
         </Box>
       </Box>
 
       {/* GRID & CHARTS */}
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-        <Grid xs={12} sm={12} md={6} lg={3} xl={3}>
+        {/* <Grid xs={12} sm={12} md={6} lg={3} xl={3}>
           <Box
             width="100%"
             backgroundColor={colors.primary[400]}
@@ -139,7 +145,7 @@ const Dashboard = () => {
               }
             />
           </Box>
-        </Grid>
+        </Grid> */}
 
         <Grid
           xs={12}
@@ -302,6 +308,9 @@ const Dashboard = () => {
         </Grid>
       </Grid>
     </Box>
+    </main>
+    </div>
+    </MyProSidebarProviderL>
   );
 };
 
