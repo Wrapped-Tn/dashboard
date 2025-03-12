@@ -85,7 +85,9 @@ export const mockDataContacts = [
     address: "0912 Won Street, Alabama, SY 10001",
     city: "New York",
     zipCode: "10001",
-    registrarId: 123512
+    registrarId: 123512, 
+    date: "10/05/2022",
+    salaire: "400 dt"
   },
   {
     id: 2,
@@ -96,7 +98,9 @@ export const mockDataContacts = [
     address: "1234 Main Street, New York, NY 10001",
     city: "New York",
     zipCode: "13151",
-    registrarId: 123512
+    registrarId: 123512,
+    date: "10/05/2022",
+    salaire: "400 dt"
   },
   {
     id: 3,
@@ -107,7 +111,9 @@ export const mockDataContacts = [
     address: "3333 Want Blvd, Estanza, NAY 42125",
     city: "New York",
     zipCode: "87281",
-    registrarId: 4132513
+    registrarId: 4132513,
+    date: "10/05/2022",
+    salaire: "400 dt"
   },
   {
     id: 4,
@@ -118,7 +124,9 @@ export const mockDataContacts = [
     address: "1514 Main Street, New York, NY 22298",
     city: "New York",
     zipCode: "15551",
-    registrarId: 123512
+    registrarId: 123512,
+    date: "10/05/2022",
+    salaire: "400 dt"
   },
   {
     id: 5,
@@ -129,7 +137,9 @@ export const mockDataContacts = [
     address: "11122 Welping Ave, Tenting, CD 21321",
     city: "Tenting",
     zipCode: "14215",
-    registrarId: 123512
+    registrarId: 123512,
+    date: "10/05/2022",
+    salaire: "400 dt"
   },
   {
     id: 6,
@@ -140,7 +150,9 @@ export const mockDataContacts = [
     address: "1234 Canvile Street, Esvazark, NY 10001",
     city: "Esvazark",
     zipCode: "10001",
-    registrarId: 123512
+    registrarId: 123512,
+    date: "10/05/2022",
+    salaire: "400 dt"
   },
   {
     id: 7,
@@ -151,7 +163,9 @@ export const mockDataContacts = [
     address: "22215 Super Street, Everting, ZO 515234",
     city: "Evertin",
     zipCode: "51523",
-    registrarId: 123512
+    registrarId: 123512,
+    date: "10/05/2022",
+    salaire: "400 dt"
   },
   {
     id: 8,
@@ -162,7 +176,9 @@ export const mockDataContacts = [
     address: "4123 Ever Blvd, Wentington, AD 142213",
     city: "Esteras",
     zipCode: "44215",
-    registrarId: 512315
+    registrarId: 512315,
+    date: "10/05/2022",
+    salaire: "400 dt"
   },
   {
     id: 9,
@@ -173,7 +189,9 @@ export const mockDataContacts = [
     address: "51234 Avery Street, Cantory, ND 212412",
     city: "Colunza",
     zipCode: "111234",
-    registrarId: 928397
+    registrarId: 928397,
+    date: "10/05/2022",
+    salaire: "400 dt"
   },
   {
     id: 10,
@@ -184,7 +202,9 @@ export const mockDataContacts = [
     address: "4123 Easer Blvd, Wentington, AD 142213",
     city: "Esteras",
     zipCode: "44215",
-    registrarId: 533215
+    registrarId: 533215,
+    date: "10/05/2022",
+    salaire: "400 dt"
   },
   {
     id: 11,
@@ -195,7 +215,9 @@ export const mockDataContacts = [
     address: "51234 Fiveton Street, CunFory, ND 212412",
     city: "Colunza",
     zipCode: "1234",
-    registrarId: 92197
+    registrarId: 92197,
+    date: "10/05/2022",
+    salaire: "400 dt"
   }
 ];
 
@@ -206,7 +228,8 @@ export const mockDataInvoices = [
     email: "jonsnow@gmail.com",
     cost: "21.24",
     phone: "(665)121-5454",
-    date: "03/12/2022"
+    date: "03/12/2022" ,
+    Status : "en route "
   },
   {
     id: 2,
@@ -214,7 +237,9 @@ export const mockDataInvoices = [
     email: "cerseilannister@gmail.com",
     cost: "1.24",
     phone: "(421)314-2288",
-    date: "06/15/2021"
+    date: "06/15/2021" ,
+    Status : "en cours"
+    
   },
   {
     id: 3,
@@ -222,7 +247,8 @@ export const mockDataInvoices = [
     email: "jaimelannister@gmail.com",
     cost: "11.24",
     phone: "(422)982-6739",
-    date: "05/02/2022"
+    date: "05/02/2022" , 
+    Status : "annuler "
   },
   {
     id: 4,
@@ -230,7 +256,8 @@ export const mockDataInvoices = [
     email: "anyastark@gmail.com",
     cost: "80.55",
     phone: "(921)425-6742",
-    date: "03/21/2022"
+    date: "03/21/2022"  ,
+    Status : "en cours"
   },
   {
     id: 5,
@@ -238,7 +265,8 @@ export const mockDataInvoices = [
     email: "daenerystargaryen@gmail.com",
     cost: "1.24",
     phone: "(421)445-1189",
-    date: "01/12/2021"
+    date: "01/12/2021" , 
+    Status : "en route"
   },
   {
     id: 6,
@@ -246,7 +274,8 @@ export const mockDataInvoices = [
     email: "evermelisandre@gmail.com",
     cost: "63.12",
     phone: "(232)545-6483",
-    date: "11/02/2022"
+    date: "11/02/2022",
+    Status : "en cours"
   },
   {
     id: 7,
@@ -254,7 +283,8 @@ export const mockDataInvoices = [
     email: "ferraraclifford@gmail.com",
     cost: "52.42",
     phone: "(543)124-0123",
-    date: "02/11/2022"
+    date: "02/11/2022",
+    Status : "livrée"
   },
   {
     id: 8,
@@ -262,7 +292,83 @@ export const mockDataInvoices = [
     email: "rossinifrances@gmail.com",
     cost: "21.24",
     phone: "(222)444-5555",
-    date: "05/02/2021"
+    date: "05/02/2021" ,
+    Status : "en route "
+  }
+];
+export const mockDataInvoicesBrand = [
+  {
+    id: 1,
+    name: "nike",
+    email: "nike@gmail.com",
+    cost: "21.24",
+    phone: "(665)121-5454",
+    date: "03/12/2022" ,
+    Status : "en route "
+  },
+  {
+    id: 2,
+    name: "adidas",
+    email: "cerseilannister@gmail.com",
+    cost: "1.24",
+    phone: "(421)314-2288",
+    date: "06/15/2021" ,
+    Status : "en cours"
+    
+  },
+  {
+    id: 3,
+    name: "peack",
+    email: "jaimelannister@gmail.com",
+    cost: "11.24",
+    phone: "(422)982-6739",
+    date: "05/02/2022" , 
+    Status : "annuler "
+  },
+  {
+    id: 4,
+    name: "northface",
+    email: "anyastark@gmail.com",
+    cost: "80.55",
+    phone: "(921)425-6742",
+    date: "03/21/2022"  ,
+    Status : "en cours"
+  },
+  {
+    id: 5,
+    name: "bershka",
+    email: "daenerystargaryen@gmail.com",
+    cost: "1.24",
+    phone: "(421)445-1189",
+    date: "01/12/2021" , 
+    Status : "en route"
+  },
+  {
+    id: 6,
+    name: "lacoste",
+    email: "evermelisandre@gmail.com",
+    cost: "63.12",
+    phone: "(232)545-6483",
+    date: "11/02/2022",
+    Status : "en cours"
+  },
+  {
+    id: 7,
+    name: "Ferrara Clifford",
+    email: "ferraraclifford@gmail.com",
+    cost: "52.42",
+    phone: "(543)124-0123",
+    date: "02/11/2022",
+    Status : "livrée"
+  },
+  {
+    id: 8,
+    name: "Rossini Frances",
+    email: "rossinifrances@gmail.com",
+    cost: "21.24",
+    phone: "(222)444-5555",
+    date: "05/02/2021" ,
+    Status : "en route "
   }
 ];
 
@@ -281,6 +387,225 @@ export const mockTransactions = [
   },
   {
     txId: "01e4dsa",
+    user: "aberdohnny",
+    date: "2021-09-01",
+    cost: "43.95"
+  },
+  {
+    txId: "51034szv",
+    user: "goodmanave",
+    date: "2022-11-05",
+    cost: "200.95"
+  },
+  {
+    txId: "0a123sb",
+    user: "stevebower",
+    date: "2022-11-02",
+    cost: "13.55"
+  },
+  {
+    txId: "01e4dsa",
+    user: "aberdohnny",
+    date: "2021-09-01",
+    cost: "43.95"
+  },
+  {
+    txId: "120s51a",
+    user: "wootzifer",
+    date: "2019-04-15",
+    cost: "24.20"
+  },
+  {
+    txId: "0315dsaa",
+    user: "jackdower",
+    date: "2022-04-01",
+    cost: "133.45"
+  }
+];
+export const mockDemendeBrand = [
+  {
+    id: 1,
+    name: "nike",
+    email: "nike@gmail.com",
+    cost: "21.24$",
+    phone: "(665)121-5454",
+    date: "03/12/2022" ,
+    Status: "accepter " , 
+    RIB: "1234 5879 5480 0012 4582"
+  },
+  {
+    id: 2,
+    name: "adidas",
+    email: "cerseilannister@gmail.com",
+    cost: "1.24$",
+    phone: "(421)314-2288",
+    date: "06/15/2021" ,
+    Status : "en cours",
+    RIB: "1234 5879 5480 0012 4582"
+    
+  },
+  {
+    id: 3,
+    name: "peack",
+    email: "jaimelannister@gmail.com",
+    cost: "11.24$",
+    phone: "(422)982-6739",
+    date: "05/02/2022" , 
+    Status : "annuler ",
+    RIB: "1234 5879 5480 0012 4582"
+  },
+  {
+    id: 4,
+    name: "northface",
+    email: "anyastark@gmail.com",
+    cost: "80.55$",
+    phone: "(921)425-6742",
+    date: "03/21/2022"  ,
+    Status : "en cours",
+    RIB: "1234 5879 5480 0012 4582"
+  },
+  {
+    id: 5,
+    name: "bershka",
+    email: "daenerystargaryen@gmail.com",
+    cost: "1.24$",
+    phone: "(421)445-1189",
+    date: "01/12/2021" , 
+    Status : "en route",
+    RIB: "1234 5879 5480 0012 4582"
+  },
+  {
+    id: 6,
+    name: "lacoste",
+    email: "evermelisandre@gmail.com",
+    cost: "63.12$",
+    phone: "(232)545-6483",
+    date: "11/02/2022",
+    Status : "en cours",
+    RIB: "1234 5879 5480 0012 4582"
+  },
+  {
+    id: 7,
+    name: "Ferrara Clifford",
+    email: "ferraraclifford@gmail.com",
+    cost: "52.42$",
+    phone: "(543)124-0123",
+    date: "02/11/2022",
+    Status : "livrée",
+    RIB: "1234 5879 5480 0012 4582"
+  },
+  {
+    id: 8,
+    name: "Rossini Frances",
+    email: "rossinifrances@gmail.com",
+    cost: "21.24$",
+    phone: "(222)444-5555",
+    date: "05/02/2021" ,
+    Status : "en route " , 
+    RIB: "1234 5879 5480 0012 4582"
+  }
+];
+export const mockDemendeUser = [
+  {
+    id: 1,
+    name: "salah",
+    email: "nike@gmail.com",
+    cost: "21.24$",
+    phone: "(665)121-5454",
+    date: "03/12/2022" ,
+    Status: "accepter " , 
+    RIB: "1234 5879 5480 0012 4582"
+  },
+  {
+    id: 2,
+    name: "aziz",
+    email: "cerseilannister@gmail.com",
+    cost: "1.24$",
+    phone: "(421)314-2288",
+    date: "06/15/2021" ,
+    Status : "en cours",
+    RIB: "1234 5879 5480 0012 4582"
+    
+  },
+  {
+    id: 3,
+    name: "jozef",
+    email: "jaimelannister@gmail.com",
+    cost: "11.24$",
+    phone: "(422)982-6739",
+    date: "05/02/2022" , 
+    Status : "annuler ",
+    RIB: "1234 5879 5480 0012 4582"
+  },
+  {
+    id: 4,
+    name: "kamel",
+    email: "anyastark@gmail.com",
+    cost: "80.55$",
+    phone: "(921)425-6742",
+    date: "03/21/2022"  ,
+    Status : "en cours",
+    RIB: "1234 5879 5480 0012 4582"
+  },
+  {
+    id: 5,
+    name: "hedi",
+    email: "daenerystargaryen@gmail.com",
+    cost: "1.24$",
+    phone: "(421)445-1189",
+    date: "01/12/2021" , 
+    Status : "en route",
+    RIB: "1234 5879 5480 0012 4582"
+  },
+  {
+    id: 6,
+    name: "khaled",
+    email: "evermelisandre@gmail.com",
+    cost: "63.12$",
+    phone: "(232)545-6483",
+    date: "11/02/2022",
+    Status : "en cours",
+    RIB: "1234 5879 5480 0012 4582"
+  },
+  {
+    id: 7,
+    name: "Ferrara Clifford",
+    email: "ferraraclifford@gmail.com",
+    cost: "52.42$",
+    phone: "(543)124-0123",
+    date: "02/11/2022",
+    Status : "livrée",
+    RIB: "1234 5879 5480 0012 4582"
+  },
+  {
+    id: 8,
+    name: "Rossini Frances",
+    email: "rossinifrances@gmail.com",
+    cost: "21.24$",
+    phone: "(222)444-5555",
+    date: "05/02/2021" ,
+    Status : "en route " , 
+    RIB: "1234 5879 5480 0012 4582"
+  }
+];
+
+
+
+export const mockTransactionBrand = [
+  {
+    txId: "nike",
+    user: "ahmed",
+    date: "2021-09-01",
+    cost: "15.3"
+  },
+  {
+    txId: "adidas",
+    user: "khaled",
+    date: "2022-04-01",
+    cost: "133.45"
+  },
+  {
+    txId: "peak",
     user: "aberdohnny",
     date: "2021-09-01",
     cost: "43.95"
@@ -432,57 +757,57 @@ export const mockPieData = [
 
 export const mockLineData = [
   {
-    id: "tunis",
-    color: tokens("dark").greenAccent[500],
+    id: "par mois",
+    color: tokens("dark").redAccent[300],
     data: [
       {
-        x: "plane",
+        x: "janv",
         y: 101
       },
       {
-        x: "helicopter",
+        x: "fivr",
         y: 75
       },
       {
-        x: "boat",
+        x: "mars",
         y: 36
       },
       {
-        x: "train",
+        x: "avr",
         y: 216
       },
       {
-        x: "subway",
+        x: "mai",
         y: 35
       },
       {
-        x: "bus",
+        x: "juin",
         y: 236
       },
       {
-        x: "car",
+        x: "juil",
         y: 88
       },
       {
-        x: "moto",
+        x: "aout",
         y: 232
       },
       {
-        x: "bicycle",
+        x: "sep",
         y: 281
       },
       {
-        x: "horse",
+        x: "oct",
         y: 1
       },
       {
-        x: "skateboard",
+        x: "nov ",
         y: 35
       },
       {
-        x: "others",
+        x: "déc",
         y: 14
-      }
+      },
     ]
   },
   // {
@@ -594,6 +919,62 @@ export const mockLineData = [
   //   ]
   // }
 ];
+export const mockLineDataW = [
+  {
+    id: "Par semaine",
+    color: tokens("dark").greenAccent[500],
+    data: [
+      {
+        x: "sem 1",
+        y: 101
+      },
+      {
+        x: "sem 2",
+        y: 75
+      },
+      {
+        x: "sem 3",
+        y: 36
+      },
+      {
+        x: "sem 4",
+        y: 216
+      },
+      {
+        x: "subway",
+        y: 35
+      },
+      {
+        x: "bus",
+        y: 236
+      },
+      {
+        x: "car",
+        y: 88
+      },
+      {
+        x: "moto",
+        y: 232
+      },
+      {
+        x: "bicycle",
+        y: 281
+      },
+      {
+        x: "horse",
+        y: 1
+      },
+      {
+        x: "skateboard",
+        y: 35
+      },
+      {
+        x: "others",
+        y: 14
+      }
+    ]
+  },
+]
 
 export const mockGeographyData = [
   {

@@ -29,6 +29,7 @@ import LineF from "./FinanceManager/pages/line";
 import PieF from "./FinanceManager/pages/pie";
 import FAQF from "./FinanceManager/pages/faq";
 import GeographyF from "./FinanceManager/pages/geography";
+import DemandeF from "./FinanceManager/pages/demandeF"
 
 import DashboardL from "./LivraisonManager/pages/dashboardL";
 import TeamL from "./LivraisonManager/pages/team";
@@ -75,6 +76,7 @@ const App = () => {
                 <Route path="/faqF" element={<FAQF />} />
                 <Route path="/calendarF" element={<CalendarF />} />
                 <Route path="/geographyF" element={<GeographyF />} />
+                <Route path= "/demF" element={<DemandeF />}/>
 
                 <Route path="/dashL" element={<DashboardL />} />
                 <Route path="/teamL" element={<TeamL/>} />

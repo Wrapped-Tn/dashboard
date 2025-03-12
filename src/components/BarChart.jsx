@@ -4,53 +4,49 @@ import { useTheme } from '@mui/material';
 import { tokens } from '../theme';
 import { mockBarData } from '../data/mockData';
 
-const BarChart = ({isDashboard=false}) => {
-    const theme = useTheme()
-    const colors = tokens(theme.palette.mode)
+const BarChart = () => {
+    const theme = useTheme();
+    const colors = tokens(theme.palette.mode);
+
     return (
         <ResponsiveBar
             data={mockBarData}
             theme={{
-                axis:{
+                axis: {
                     domain: {           
-                        line:{
-                            stroke:colors.grey[100]
-                        }
-                    },
-                    legend:{
-                        text:{
-                           fill:colors.grey[100] 
-                        }
-                    },
-                    ticks:{
-                        line:{
-                           stroke:colors.grey[100],
-                           strokeWidth:1
+                        line: {
+                            stroke: colors.grey[100],
                         },
-                        text:{
-                            fill:colors.grey[100] 
-                         }
-                    }
+                    },
+                    legend: {
+                        text: {
+                            fill: colors.grey[100],
+                        },
+                    },
+                    ticks: {
+                        line: {
+                            stroke: colors.grey[100],
+                            strokeWidth: 1,
+                        },
+                        text: {
+                            fill: colors.grey[100],
+                        },
+                    },
                 },
-                legends:{
-                    text:{
-                        fill:colors.grey[100]
-                    }
+                legends: {
+                    text: {
+                        fill: colors.grey[100],
+                    },
                 },
                 tooltip: {
                     container: {
                         background: colors.primary[400],
                         color: colors.grey[100],
                     },
-                }
+                },
             }}
             keys={[
                 'hot dog',
-                'burger',
-                'sandwich',
-                'kebab',
-                'fries',
-                'donut'
             ]}
             indexBy="country"
             margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
@@ -68,7 +64,7 @@ const BarChart = ({isDashboard=false}) => {
                     color: '#38bcb2',
                     size: 4,
                     padding: 1,
-                    stagger: true
+                    stagger: true,
                 },
                 {
                     id: 'lines',
@@ -77,32 +73,29 @@ const BarChart = ({isDashboard=false}) => {
                     color: '#eed312',
                     rotation: -45,
                     lineWidth: 6,
-                    spacing: 10
-                }
+                    spacing: 10,
+                },
             ]}
             fill={[
                 {
                     match: {
-                        id: 'fries'
+                        id: 'fries',
                     },
-                    id: 'dots'
+                    id: 'dots',
                 },
                 {
                     match: {
-                        id: 'sandwich'
+                        id: 'sandwich',
                     },
-                    id: 'lines'
-                }
+                    id: 'lines',
+                },
             ]}
             borderRadius={1}
             borderColor={{
                 from: 'color',
                 modifiers: [
-                    [
-                        'darker',
-                        '1.1'
-                    ]
-                ]
+                    ['darker', '1.1'],
+                ],
             }}
             axisTop={null}
             axisRight={null}
@@ -110,28 +103,25 @@ const BarChart = ({isDashboard=false}) => {
                 tickSize: 5,
                 tickPadding: 5,
                 tickRotation: 0,
-                legend: isDashboard ? undefined : 'country',
+                legend: 'country',
                 legendPosition: 'middle',
-                legendOffset: 32
+                legendOffset: 32,
             }}
             axisLeft={{
                 tickSize: 5,
                 tickPadding: 5,
                 tickRotation: 0,
-                legend: isDashboard ? undefined : 'food',
+                legend: 'food',
                 legendPosition: 'middle',
-                legendOffset: -40
+                legendOffset: -40,
             }}
             labelSkipWidth={12}
             labelSkipHeight={12}
             labelTextColor={{
                 from: 'color',
                 modifiers: [
-                    [
-                        'darker',
-                        1.6
-                    ]
-                ]
+                    ['darker', 1.6],
+                ],
             }}
             legends={[
                 {
@@ -151,18 +141,17 @@ const BarChart = ({isDashboard=false}) => {
                         {
                             on: 'hover',
                             style: {
-                                itemOpacity: 1
-                            }
-                        }
-                    ]
-                }
+                                itemOpacity: 1,
+                            },
+                        },
+                    ],
+                },
             ]}
             role="application"
             ariaLabel="Nivo bar chart demo"
-            barAriaLabel={function(e){return e.id+": "+e.formattedValue+" in country: "+e.indexValue}}
+            barAriaLabel={(e) => `${e.id}: ${e.formattedValue} in country: ${e.indexValue}`}
         />
-    )
+    );
+};
 
-}
-
-export default BarChart
+export default BarChart;

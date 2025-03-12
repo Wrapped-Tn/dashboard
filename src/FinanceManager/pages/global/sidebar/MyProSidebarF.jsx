@@ -185,7 +185,7 @@ const MyProSidebar = () => {
               selected={selected}
               setSelected={setSelected}
             />
-            <Item
+            {/* <Item
               title="user"
               to="/contactsF"
               icon={<PeopleOutlinedIcon />}
@@ -198,10 +198,10 @@ const MyProSidebar = () => {
               icon={<LocalShippingIcon />}
               selected={selected}
               setSelected={setSelected}
-            />
+            /> */}
              <Item
               title="Demande"
-              to="/teamF"
+              to="/demF"
               icon={<ListAltIcon />}
               selected={selected}
               setSelected={setSelected}

@@ -185,13 +185,13 @@ Livraison Manager
               selected={selected}
               setSelected={setSelected}
             />
-            <Item
+            {/* <Item
               title="user"
               to="/contactsL"
               icon={<PeopleOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            />
+            /> */}
             <Item
               title="livraison"
               to="/invoicesL"
@@ -199,14 +199,14 @@ Livraison Manager
               selected={selected}
               setSelected={setSelected}
             />
-             <Item
+             {/* <Item
               title="Demande"
               to="/teamL"
               icon={<ListAltIcon />}
               selected={selected}
               setSelected={setSelected}
-            />
-            <Typography
+            /> */}
+            {/* <Typography
               variant="h6"
               color={colors.grey[300]}
               sx={{ m: "15px 20px 5px 20px" }}
@@ -270,7 +270,7 @@ Livraison Manager
               icon={<MapOutlinedIcon />}
               selected={selected}
               setSelected={setSelected}
-            />
+            /> */}
           </Box>
         </Menu>
       </Sidebar>

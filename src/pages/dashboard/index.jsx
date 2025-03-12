@@ -1,6 +1,6 @@
 import {
   Box,
-  Button,
+  Button,Select,MenuItem,
   IconButton,
   Typography,
   useTheme,
@@ -9,6 +9,7 @@ import {
 import Grid from "@mui/material/Unstable_Grid2";
 import { tokens } from "../../theme";
 import { mockTransactions } from "../../data/mockData";
+import {mockTransactionBrand} from "../../data/mockData";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import EmailIcon from "@mui/icons-material/Email";
 import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
@@ -23,11 +24,30 @@ import ProgressCircle from "../../components/ProgressCircle";
 import { MyProSidebarProvider } from "../global/sidebar/sidebarContext";
 
 import Topbar from "../global/Topbar";
+import { useState } from "react";
 
 const Dashboard = () => {
   const theme = useTheme();
   const smScreen = useMediaQuery(theme.breakpoints.up("sm"));
   const colors = tokens(theme.palette.mode);
+  const [data , setData] = useState([])
+  const [dataaff , setDataaff] = useState (mockTransactions)
+
+
+  const changeDat = (data) =>{
+    console.log(data);
+    
+    if (data === "brand") {
+      setDataaff(mockTransactionBrand);
+    } else if (data === "user") {
+      setDataaff(mockTransactions);
+    } else {
+      setDataaff([]); // Optionnel: vider les données si aucune option valide n'est sélectionnée
+    }
+  }
+  const chnageData2 = (data) =>{
+  
+  }
   return (
     <MyProSidebarProvider>
           <div style={{ height: "100%", width: "100%" }}>
@@ -45,7 +65,7 @@ const Dashboard = () => {
       >
         <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
 
-        <Box>
+        {/* <Box>
           <Button
             sx={{
               backgroundColor: colors.blueAccent[700],
@@ -58,7 +78,7 @@ const Dashboard = () => {
             <DownloadOutlinedIcon sx={{ mr: "10px" }} />
             Download Reports
           </Button>
-        </Box>
+        </Box> */}
       </Box>
 
       {/* GRID & CHARTS */}
@@ -183,11 +203,32 @@ const Dashboard = () => {
                   </Typography>
                 </Box>
                 <Box>
-                  <IconButton>
-                    <DownloadOutlinedIcon
-                      sx={{ fontSize: "26px", color: colors.greenAccent[500] }}
-                    />
-                  </IconButton>
+                <Select
+  sx={{
+    backgroundColor: "transparent", 
+    color: colors.grey[100],
+    fontSize: "14px",
+    fontWeight: "bold",
+    padding: "0px 20px",
+    border: "1px solid transparent", // Rendre la bordure transparente
+    "& .MuiOutlinedInput-notchedOutline": {
+      borderColor: "transparent", // Supprimer la bordure du champ
+    },
+    "&:hover .MuiOutlinedInput-notchedOutline": {
+      borderColor: "transparent", // Empêcher la bordure d'apparaître au survol
+    },
+    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: "transparent", // Empêcher la bordure d'apparaître au focus
+    },
+  }}
+  defaultValue="someOption"
+  onChange={(e)=>{chnageData2(e.target.value)}}
+ 
+>
+  <MenuItem value="par semaine">par semaine </MenuItem>
+  <MenuItem value="par mois">par mois</MenuItem>
+</Select>
+
                 </Box>
               </Box>
               <Box height="250px" m="-20px 0 0 0">
@@ -269,10 +310,39 @@ const Dashboard = () => {
                 fontWeight="600"
                 color={colors.grey[100]}
               >
-                Resent Transaction
+                   <Box>
+                   Resent Transaction  
+                   <Select
+                  
+  sx={{
+    backgroundColor: "transparent",
+    color: colors.grey[100],
+    fontSize: "14px",
+    fontWeight: "bold",
+    padding: "0px 20px",
+    border: "1px solid transparent", // Rendre la bordure transparente
+    "& .MuiOutlinedInput-notchedOutline": {
+      borderColor: "transparent", // Supprimer la bordure du champ
+    },
+    "&:hover .MuiOutlinedInput-notchedOutline": {
+      borderColor: "transparent", // Empêcher la bordure d'apparaître au survol
+    },
+    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+      borderColor: "transparent", // Empêcher la bordure d'apparaître au focus
+    },
+  }}
+  defaultValue="brand"
+  onChange={(e)=>{changeDat(e.target.value)}}
+>
+  <MenuItem value="brand">brand</MenuItem>
+  <MenuItem value="user">user</MenuItem>
+</Select>
+
+        
+        </Box>
               </Typography>
             </Box>
-            {mockTransactions.map((transaction, i) => {
+            {dataaff.map((transaction, i) => {
               return (
                 <Box
                   key={`${transaction}-${i}`}

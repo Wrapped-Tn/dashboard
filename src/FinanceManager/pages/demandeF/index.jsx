@@ -2,28 +2,29 @@ import React, { useState } from "react";
 import {
   Box,
   useTheme,
+  Typography,
   IconButton,
-  Select,
   MenuItem,
+  Select,
   Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
   Button,
-  Typography,
 } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../../theme";
-import { mockDataInvoices } from "../../../data/mockData";
-import { mockDataInvoicesBrand } from "../../../data/mockData";
-import { MyProSidebarProviderL } from "../global/sidebar/sidebarContextL";
+import { mockDemendeBrand } from "../../../data/mockData";
+import { mockDemendeUser } from "../../../data/mockData";
+import { MyProSidebarProviderF } from "../global/sidebar/sidebarContextF";
 import Topbar from "../global/Topbar";
 import Header from "../../../components/Header";
 
 const Contacts = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [dataaff, setDataaff] = useState(mockDataInvoices);
+
+  const [dataaff, setDataaff] = useState(mockDemendeUser);
   const [selectedRow, setSelectedRow] = useState(null); // Ligne sélectionnée pour la mise à jour
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false); // État pour la boîte de dialogue de confirmation
   const [newStatus, setNewStatus] = useState(""); // Nouveau statut sélectionné
@@ -31,9 +32,9 @@ const Contacts = () => {
   // Fonction pour changer les données affichées
   const changeDat = (data) => {
     if (data === "USER") {
-      setDataaff(mockDataInvoices);
+      setDataaff(mockDemendeUser);
     } else if (data === "BRAND") {
-      setDataaff(mockDataInvoicesBrand);
+      setDataaff(mockDemendeBrand);
     } else {
       setDataaff([]); // Optionnel: vider les données si aucune option valide n'est sélectionnée
     }
@@ -65,18 +66,19 @@ const Contacts = () => {
   };
 
   const columns = [
-    { field: "id", headerName: "Id" },
+    { field: "id", headerName: "ID" },
     {
       field: "name",
-      headerName: "Name",
+      headerName: "Nom",
       width: 200,
       cellClassName: "name-column--cell",
     },
     { field: "email", headerName: "Email", width: 200 },
-    { field: "phone", headerName: "Phone Number", width: 100 },
-    { field: "cost", headerName: "Cost", width: 100 },
+    { field: "phone", headerName: "Téléphone", width: 100 },
     { field: "date", headerName: "Date", width: 100 },
-    { field: "Status", headerName: "Status", width: 100 },
+    { field: "cost", headerName: "Coût", width: 100 },
+    { field: "RIB", headerName: "RIB", width: 200 },
+    { field: "Status", headerName: "Statut", width: 100 },
     {
       field: "actions",
       headerName: "Actions",
@@ -103,24 +105,24 @@ const Contacts = () => {
           value={params.row.Status || "en cours"} // Valeur par défaut
           onChange={(e) => handleOpenConfirmDialog(params.row, e.target.value)}
         >
-          <MenuItem value="en cours">En cours</MenuItem>
-          <MenuItem value="en route">En route</MenuItem>
-          <MenuItem value="livré">Livrée</MenuItem>
+          <MenuItem value="accepter">Accepter</MenuItem>
           <MenuItem value="annuler">Annuler</MenuItem>
+          <MenuItem value="en cours">En cours de traitement</MenuItem>
+          <MenuItem value="reffusé">Refusé</MenuItem>
         </Select>
       ),
     },
   ];
 
   return (
-    <MyProSidebarProviderL>
+    <MyProSidebarProviderF>
       <div style={{ height: "100%", width: "100%" }}>
         <main>
           <Topbar />
           <Box m="20px">
             <Box display="flex" justifyContent="space-between" alignItems="center">
-              <Header title="LIVRAISON" subtitle="Welcome" />
-              {/* <Select
+              <Header title="DEMANDE" subtitle="Bienvenue" />
+              <Select
                 sx={{
                   backgroundColor: "transparent",
                   color: colors.grey[100],
@@ -141,9 +143,9 @@ const Contacts = () => {
                 defaultValue="USER"
                 onChange={(e) => changeDat(e.target.value)}
               >
-                <MenuItem value="USER">USER</MenuItem>
-                <MenuItem value="BRAND">BRAND</MenuItem>
-              </Select> */}
+                <MenuItem value="USER">UTILISATEUR</MenuItem>
+                <MenuItem value="BRAND">MARQUE</MenuItem>
+              </Select>
             </Box>
             <Box
               m="8px 0 0 0"
@@ -178,7 +180,11 @@ const Contacts = () => {
                 },
               }}
             >
-              <DataGrid rows={dataaff} columns={columns} components={{ Toolbar: GridToolbar }} />
+              <DataGrid
+                rows={dataaff}
+                columns={columns}
+                components={{ Toolbar: GridToolbar }}
+              />
             </Box>
           </Box>
         </main>
@@ -202,7 +208,7 @@ const Contacts = () => {
           </DialogActions>
         </Dialog>
       </div>
-    </MyProSidebarProviderL>
+    </MyProSidebarProviderF>
   );
 };
 
