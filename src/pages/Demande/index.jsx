@@ -1,34 +1,30 @@
 import React, { useState } from "react";
-import { Box, useTheme,Typography, IconButton,MenuItem, Select } from "@mui/material";
+import { Box, useTheme, Typography, IconButton, MenuItem, Select } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
-import { mockDataInvoices } from "../../data/mockData";
-import { mockDataInvoicesBrand } from "../../data/mockData";
+import { mockDemendeBrand } from "../../data/mockData";
+import { mockDemendeUser } from "../../data/mockData";
 import { MyProSidebarProvider } from "../global/sidebar/sidebarContext";
 import Topbar from "../global/Topbar";
 import Header from "../../components/Header";
 
-
 const Contacts = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
- 
-  const [dataaff , setDataaff] = useState (mockDataInvoices)
 
+  const [dataaff, setDataaff] = useState(mockDemendeUser);
 
-  const changeDat = (data) =>{
+  const changeDat = (data) => {
     console.log(data);
-    
+
     if (data === "USER") {
-      setDataaff(mockDataInvoices);
+      setDataaff(mockDemendeUser);
     } else if (data === "BRAND") {
-      setDataaff(mockDataInvoicesBrand);
+      setDataaff(mockDemendeBrand);
     } else {
       setDataaff([]); // Optionnel: vider les données si aucune option valide n'est sélectionnée
     }
-  }
-
-
+  };
 
   const columns = [
     { field: "id", headerName: "Id" },
@@ -40,16 +36,18 @@ const Contacts = () => {
     },
     { field: "email", headerName: "Email", width: 200 },
     { field: "phone", headerName: "Phone Number", width: 100 },
-
+    { field: "date", headerName: "Date", width: 100 },
     {
       field: "cost",
       headerName: "Cost",
       width: 100,
-  
     },
-    { field: "date", headerName: "Date", width: 100 },
-    { field: "Status", headerName: "Status", width: 100 }
-
+    {
+      field: "RIB",
+      headerName: "RIB",
+      width: 200,
+    },
+    { field: "Status", headerName: "Status", width: 100 },
   ];
 
   return (
@@ -59,32 +57,33 @@ const Contacts = () => {
           <Topbar />
           <Box m="20px">
             <Box display="flex" justifyContent="space-between" alignItems="center">
-              <Header title="LIVRAISON" subtitle="Welcome" />
+              <Header title="DEMENDE" subtitle="Welcome" />
               <Select
-  sx={{
-    backgroundColor: "transparent", 
-    color: colors.grey[100],
-    fontSize: "14px",
-    fontWeight: "bold",
-    padding: "0px 20px",
-    border: "1px solid transparent", // Rendre la bordure transparente
-    "& .MuiOutlinedInput-notchedOutline": {
-      borderColor: "transparent", // Supprimer la bordure du champ
-    },
-    "&:hover .MuiOutlinedInput-notchedOutline": {
-      borderColor: "transparent", // Empêcher la bordure d'apparaître au survol
-    },
-    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "transparent", // Empêcher la bordure d'apparaître au focus
-    },
-  }}
-  defaultValue="USER"
-  onChange={(e)=>{changeDat(e.target.value)}}
- 
->
-  <MenuItem value="USER">USER</MenuItem>
-  <MenuItem value="BRAND">BRAND</MenuItem>
-</Select>
+                sx={{
+                  backgroundColor: "transparent",
+                  color: colors.grey[100],
+                  fontSize: "14px",
+                  fontWeight: "bold",
+                  padding: "0px 20px",
+                  border: "1px solid transparent", // Rendre la bordure transparente
+                  "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "transparent", // Supprimer la bordure du champ
+                  },
+                  "&:hover .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "transparent", // Empêcher la bordure d'apparaître au survol
+                  },
+                  "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "transparent", // Empêcher la bordure d'apparaître au focus
+                  },
+                }}
+                defaultValue="USER"
+                onChange={(e) => {
+                  changeDat(e.target.value);
+                }}
+              >
+                <MenuItem value="USER">USER</MenuItem>
+                <MenuItem value="BRAND">BRAND</MenuItem>
+              </Select>
             </Box>
             <Box
               m="8px 0 0 0"

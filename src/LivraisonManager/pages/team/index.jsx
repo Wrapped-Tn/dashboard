@@ -12,13 +12,12 @@ import {
   IconButton,
   Badge
 } from "@mui/material";
-import { tokens } from "../../theme";
-import Header from "../../components/Header";
+import { tokens } from "../../../theme";
+import Header from "../../../components/Header";
 import SendIcon from "@mui/icons-material/Send";
 import MailIcon from "@mui/icons-material/Mail";
 import DraftsIcon from "@mui/icons-material/Drafts";
-import { MyProSidebarProvider } from "../global/sidebar/sidebarContext";
-
+import { MyProSidebarProviderL } from "../global/sidebar/sidebarContextL";
 import Topbar from "../global/Topbar";
 
 const Messages = () => {
@@ -173,10 +172,10 @@ const Messages = () => {
   );
 
   return (
-    <MyProSidebarProvider>
-          <div style={{ height: "100%", width: "100%" }}>
-            <main>
-              <Topbar />
+    <MyProSidebarProviderL>
+    <div style={{ height: "100%", width: "100%" }}>
+      <main>
+        <Topbar />
     <Box m="20px">
       <Header title="MESSAGERIE" subtitle="Boîte de réception et envoi" />
       
@@ -201,7 +200,7 @@ const Messages = () => {
     </Box>
     </main>
     </div>
-    </MyProSidebarProvider>
+    </MyProSidebarProviderL>
   );
 };
 

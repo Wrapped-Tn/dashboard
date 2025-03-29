@@ -1,58 +1,37 @@
 import {
   Box,
-  Button,Select,MenuItem,
+  Button,
   IconButton,
   Typography,
   useTheme,
   useMediaQuery,
 } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import { tokens } from "../../theme";
-import { mockTransactions } from "../../data/mockData";
-import {mockTransactionBrand} from "../../data/mockData";
+import { tokens } from "../../../theme";
+import { mockTransactions } from "../../../data/mockData";
 import DownloadOutlinedIcon from "@mui/icons-material/DownloadOutlined";
 import EmailIcon from "@mui/icons-material/Email";
 import PointOfSaleIcon from "@mui/icons-material/PointOfSale";
 import PersonAddIcon from "@mui/icons-material/PersonAdd";
 import TrafficIcon from "@mui/icons-material/Traffic";
-import Header from "../../components/Header";
-import LineChart from "../../components/LineChart";
-import GeographyChart from "../../components/GeographyChart";
-import BarChart from "../../components/BarChart";
-import StatBox from "../../components/StatBox";
-import ProgressCircle from "../../components/ProgressCircle";
-import { MyProSidebarProvider } from "../global/sidebar/sidebarContext";
-
+import Header from "../../../components/Header";
+import LineChart from "../../../components/LineChart";
+import GeographyChart from "../../../components/GeographyChart";
+import BarChart from "../../../components/BarChart";
+import StatBox from "../../../components/StatBox";
+import ProgressCircle from "../../../components/ProgressCircle";
+import { MyProSidebarProviderL } from "../global/sidebar/sidebarContextL";
 import Topbar from "../global/Topbar";
-import { useState } from "react";
 
 const Dashboard = () => {
   const theme = useTheme();
   const smScreen = useMediaQuery(theme.breakpoints.up("sm"));
   const colors = tokens(theme.palette.mode);
-  const [data , setData] = useState([])
-  const [dataaff , setDataaff] = useState (mockTransactions)
-
-
-  const changeDat = (data) =>{
-    console.log(data);
-    
-    if (data === "brand") {
-      setDataaff(mockTransactionBrand);
-    } else if (data === "user") {
-      setDataaff(mockTransactions);
-    } else {
-      setDataaff([]); // Optionnel: vider les données si aucune option valide n'est sélectionnée
-    }
-  }
-  const chnageData2 = (data) =>{
-  
-  }
   return (
-    <MyProSidebarProvider>
-          <div style={{ height: "100%", width: "100%" }}>
-            <main>
-              <Topbar />
+    <MyProSidebarProviderL>
+    <div style={{ height: "100%", width: "100%" }}>
+      <main>
+        <Topbar />
     <Box m="20px">
       {/* HEADER */}
 
@@ -63,10 +42,10 @@ const Dashboard = () => {
         alignItems={smScreen ? "center" : "start"}
         m="10px 0"
       >
-        <Header title="DASHBOARD" subtitle="Welcome to your dashboard" />
+        <Header title="Livraison Manager " subtitle="Welcome to your dashboard" />
 
-        {/* <Box>
-          <Button
+        <Box>
+          {/* <Button
             sx={{
               backgroundColor: colors.blueAccent[700],
               color: colors.grey[100],
@@ -77,13 +56,13 @@ const Dashboard = () => {
           >
             <DownloadOutlinedIcon sx={{ mr: "10px" }} />
             Download Reports
-          </Button>
-        </Box> */}
+          </Button> */}
+        </Box>
       </Box>
 
       {/* GRID & CHARTS */}
       <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-        <Grid xs={12} sm={12} md={6} lg={3} xl={3}>
+        {/* <Grid xs={12} sm={12} md={6} lg={3} xl={3}>
           <Box
             width="100%"
             backgroundColor={colors.primary[400]}
@@ -166,7 +145,7 @@ const Dashboard = () => {
               }
             />
           </Box>
-        </Grid>
+        </Grid> */}
 
         <Grid
           xs={12}
@@ -203,32 +182,11 @@ const Dashboard = () => {
                   </Typography>
                 </Box>
                 <Box>
-                <Select
-  sx={{
-    backgroundColor: "transparent", 
-    color: colors.grey[100],
-    fontSize: "14px",
-    fontWeight: "bold",
-    padding: "0px 20px",
-    border: "1px solid transparent", // Rendre la bordure transparente
-    "& .MuiOutlinedInput-notchedOutline": {
-      borderColor: "transparent", // Supprimer la bordure du champ
-    },
-    "&:hover .MuiOutlinedInput-notchedOutline": {
-      borderColor: "transparent", // Empêcher la bordure d'apparaître au survol
-    },
-    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "transparent", // Empêcher la bordure d'apparaître au focus
-    },
-  }}
-  defaultValue="someOption"
-  onChange={(e)=>{chnageData2(e.target.value)}}
- 
->
-  <MenuItem value="par semaine">par semaine </MenuItem>
-  <MenuItem value="par mois">par mois</MenuItem>
-</Select>
-
+                  <IconButton>
+                    <DownloadOutlinedIcon
+                      sx={{ fontSize: "26px", color: colors.greenAccent[500] }}
+                    />
+                  </IconButton>
                 </Box>
               </Box>
               <Box height="250px" m="-20px 0 0 0">
@@ -310,39 +268,10 @@ const Dashboard = () => {
                 fontWeight="600"
                 color={colors.grey[100]}
               >
-                   <Box>
-                   Resent Transaction  
-                   <Select
-                  
-  sx={{
-    backgroundColor: "transparent",
-    color: colors.grey[100],
-    fontSize: "14px",
-    fontWeight: "bold",
-    padding: "0px 20px",
-    border: "1px solid transparent", // Rendre la bordure transparente
-    "& .MuiOutlinedInput-notchedOutline": {
-      borderColor: "transparent", // Supprimer la bordure du champ
-    },
-    "&:hover .MuiOutlinedInput-notchedOutline": {
-      borderColor: "transparent", // Empêcher la bordure d'apparaître au survol
-    },
-    "&.Mui-focused .MuiOutlinedInput-notchedOutline": {
-      borderColor: "transparent", // Empêcher la bordure d'apparaître au focus
-    },
-  }}
-  defaultValue="brand"
-  onChange={(e)=>{changeDat(e.target.value)}}
->
-  <MenuItem value="brand">brand</MenuItem>
-  <MenuItem value="user">user</MenuItem>
-</Select>
-
-        
-        </Box>
+                Resent Transaction
               </Typography>
             </Box>
-            {dataaff.map((transaction, i) => {
+            {mockTransactions.map((transaction, i) => {
               return (
                 <Box
                   key={`${transaction}-${i}`}
@@ -379,9 +308,9 @@ const Dashboard = () => {
         </Grid>
       </Grid>
     </Box>
-   </main>
-   </div>
-   </MyProSidebarProvider> 
+    </main>
+    </div>
+    </MyProSidebarProviderL>
   );
 };
 
