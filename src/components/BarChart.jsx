@@ -1,16 +1,62 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ResponsiveBar } from '@nivo/bar';
 import { useTheme } from '@mui/material';
 import { tokens } from '../theme';
 import { mockBarData } from '../data/mockData';
+import { statBare } from '../APIcons/admin/apisAdmin';
 
 const BarChart = () => {
     const theme = useTheme();
     const colors = tokens(theme.palette.mode);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [chartData, setChartData] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setLoading(true);
+                setError(null);
+                
+                const response = await statBare();
+                
+                if (response && response.topBrands) {
+                    // Transform the API data to match the format expected by the bar chart
+                    const transformedData = response.topBrands.map(brand => ({
+                        country: brand.brandName,
+                        'hot dog': brand.totalRevenue,
+                        revenue: brand.totalRevenue
+                    }));
+                    setChartData(transformedData);
+                } else {
+                    setError("Aucune donnée reçue");
+                    // Fall back to mock data if no API data is available
+                    setChartData(mockBarData);
+                }
+            } catch (e) {
+                setError("Erreur lors de la récupération des données");
+                console.error(e);
+                // Fall back to mock data in case of error
+                setChartData(mockBarData);
+            } finally {
+                setLoading(false);
+            }
+        };
+        
+        fetchData();
+    }, []);
+
+    if (loading) {
+        return <div>Loading...</div>;
+    }
+
+    if (error && chartData.length === 0) {
+        return <div>{error}</div>;
+    }
 
     return (
         <ResponsiveBar
-            data={mockBarData}
+            data={chartData}
             theme={{
                 axis: {
                     domain: {           
@@ -42,68 +88,29 @@ const BarChart = () => {
                     container: {
                         background: colors.primary[400],
                         color: colors.grey[100],
+                        fontSize: '12px',
+                    },
+                    basic: {
+                        whiteSpace: 'pre',
+                        display: 'flex',
+                        alignItems: 'center',
                     },
                 },
             }}
-            keys={[
-                'hot dog',
-            ]}
+            keys={['hot dog']}
             indexBy="country"
             margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
             padding={0.4}
             innerPadding={1}
             valueScale={{ type: 'linear' }}
             indexScale={{ type: 'band', round: true }}
-            valueFormat=" <-"
+            valueFormat={value => `${value.toLocaleString()} €`}
             colors={{ scheme: 'category10' }}
-            defs={[
-                {
-                    id: 'dots',
-                    type: 'patternDots',
-                    background: 'inherit',
-                    color: '#38bcb2',
-                    size: 4,
-                    padding: 1,
-                    stagger: true,
-                },
-                {
-                    id: 'lines',
-                    type: 'patternLines',
-                    background: 'inherit',
-                    color: '#eed312',
-                    rotation: -45,
-                    lineWidth: 6,
-                    spacing: 10,
-                },
-            ]}
-            fill={[
-                {
-                    match: {
-                        id: 'fries',
-                    },
-                    id: 'dots',
-                },
-                {
-                    match: {
-                        id: 'sandwich',
-                    },
-                    id: 'lines',
-                },
-            ]}
-            borderRadius={1}
-            borderColor={{
-                from: 'color',
-                modifiers: [
-                    ['darker', '1.1'],
-                ],
-            }}
-            axisTop={null}
-            axisRight={null}
             axisBottom={{
                 tickSize: 5,
                 tickPadding: 5,
                 tickRotation: 0,
-                legend: 'country',
+                legend: 'Top 5 marques par revenus',
                 legendPosition: 'middle',
                 legendOffset: 32,
             }}
@@ -111,18 +118,19 @@ const BarChart = () => {
                 tickSize: 5,
                 tickPadding: 5,
                 tickRotation: 0,
-                legend: 'food',
+                legend: 'Revenu total (€)',
                 legendPosition: 'middle',
                 legendOffset: -40,
             }}
             labelSkipWidth={12}
             labelSkipHeight={12}
-            labelTextColor={{
-                from: 'color',
-                modifiers: [
-                    ['darker', 1.6],
-                ],
-            }}
+            tooltip={({ id, value, indexValue }) => (
+                <div style={{ padding: '8px', background: colors.primary[400] }}>
+                    <strong>{indexValue}</strong>
+                    <br />
+                    {`${id}: ${value.toLocaleString()} €`}
+                </div>
+            )}
             legends={[
                 {
                     dataFrom: 'keys',
@@ -148,8 +156,8 @@ const BarChart = () => {
                 },
             ]}
             role="application"
-            ariaLabel="Nivo bar chart demo"
-            barAriaLabel={(e) => `${e.id}: ${e.formattedValue} in country: ${e.indexValue}`}
+            ariaLabel="Top 5 marques par revenus"
+            barAriaLabel={(e) => `${e.id}: ${e.formattedValue} pour la marque: ${e.indexValue}`}
         />
     );
 };
