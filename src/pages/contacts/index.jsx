@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Box,
   useTheme,
@@ -9,69 +9,155 @@ import {
   DialogContent,
   DialogActions,
   TextField,
+  CircularProgress,
+  Alert,
+  Grid,
+  Snackbar
 } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
-import { mockDataContacts } from "../../data/mockData";
 import { MyProSidebarProvider } from "../global/sidebar/sidebarContext";
 import Topbar from "../global/Topbar";
 import Header from "../../components/Header";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
+import { getUser, addWorker, updateWorker, deleteWorker } from "../../APIcons/admin/apisAdmin";
 
 const Contacts = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
-  const [rows, setRows] = useState(mockDataContacts);
+  const [rows, setRows] = useState([]);
   const [openAdd, setOpenAdd] = useState(false);
   const [openUpdate, setOpenUpdate] = useState(false);
   const [openDelete, setOpenDelete] = useState(false);
   const [selectedContact, setSelectedContact] = useState(null);
   const [newContact, setNewContact] = useState({
-    name: "",
+    full_name: "",
     email: "",
     age: "",
     phone: "",
     address: "",
-    city: "",
-    zipCode: "",
-    date: "",
-    salaire: "",
+    cin: "",
+    joined_date: "",
+    salary: ""
   });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success"
+  });
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  const handleClickOpenAdd = () => {
-    setOpenAdd(true);
+  const refreshData = async () => {
+    setLoading(true);
+    try {
+      const data = await getUser();
+      if (data) {
+        setRows(data);
+      }
+    } catch (err) {
+      setError(err.message);
+      showSnackbar("Erreur lors du rafraîchissement des données", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    refreshData();
+  }, [refreshTrigger]);
+
+  const showSnackbar = (message, severity = "success") => {
+    setSnackbar({ open: true, message, severity });
+  };
+
+  const handleCloseSnackbar = () => {
+    setSnackbar(prev => ({ ...prev, open: false }));
+  };
+
+  const columns = useMemo(() => [
+    { field: "id", headerName: "ID", width: 80 },
+    { field: "full_name", headerName: "Nom complet", width: 200 },
+    { field: "age", headerName: "Âge", width: 80, type: "number" },
+    { field: "phone", headerName: "Téléphone", width: 150 },
+    { field: "email", headerName: "Email", width: 250 },
+    { field: "address", headerName: "Adresse", width: 200 },
+    { field: "cin", headerName: "CIN", width: 150 },
+    { 
+      field: "joined_date", 
+      headerName: "Date d'adhésion", 
+      width: 150,
+      valueFormatter: (params) => 
+        params.value ? new Date(params.value).toLocaleDateString('fr-FR') : ''
+    },
+    { 
+      field: "salary", 
+      headerName: "Salaire", 
+      width: 120,
+      type: "number",
+      valueFormatter: (params) => 
+        `${parseFloat(params.value || 0).toFixed(2)} €`
+    },
+    {
+      field: "actions",
+      headerName: "Actions",
+      width: 150,
+      renderCell: (params) => (
+        <>
+          <IconButton 
+            onClick={() => handleClickOpenUpdate(params.row)} 
+            color="primary"
+            aria-label="modifier"
+          >
+            <EditIcon />
+          </IconButton>
+          <IconButton 
+            onClick={() => handleClickOpenDelete(params.row.id)} 
+            color="error"
+            aria-label="supprimer"
+          >
+            <DeleteIcon />
+          </IconButton>
+        </>
+      ),
+    },
+  ], []);
+
+  const handleClickOpenAdd = () => setOpenAdd(true);
+  
+  const handleClickOpenUpdate = (contact) => {
+    setSelectedContact({
+      ...contact,
+      joined_date: contact.joined_date?.split('T')[0] || ''
+    });
+    setOpenUpdate(true);
+  };
+  
+  const handleClickOpenDelete = (id) => {
+    setSelectedContact(id);
+    setOpenDelete(true);
   };
 
   const handleCloseAdd = () => {
     setOpenAdd(false);
     setNewContact({
-      name: "",
+      full_name: "",
       email: "",
       age: "",
       phone: "",
       address: "",
-      city: "",
-      zipCode: "",
-      date: "",
-      salaire: "",
+      cin: "",
+      joined_date: "",
+      salary: ""
     });
-  };
-
-  const handleClickOpenUpdate = (contact) => {
-    setSelectedContact(contact);
-    setOpenUpdate(true);
   };
 
   const handleCloseUpdate = () => {
     setOpenUpdate(false);
     setSelectedContact(null);
-  };
-
-  const handleClickOpenDelete = (id) => {
-    setSelectedContact(id);
-    setOpenDelete(true);
   };
 
   const handleCloseDelete = () => {
@@ -81,70 +167,102 @@ const Contacts = () => {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setNewContact({ ...newContact, [name]: value });
+    setNewContact(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleAddContact = () => {
-    const id = rows.length + 1;
-    setRows([...rows, { id, ...newContact }]);
-    handleCloseAdd();
-  };
-// fonction permer de supp et mise a jour les donnés 
-  const handleUpdateContact = () => {
-   
-    handleCloseUpdate();
+  const handleAddContact = async () => {
+    try {
+      if (!newContact.full_name || !newContact.email || !newContact.phone || !newContact.cin) {
+        showSnackbar("Veuillez remplir tous les champs obligatoires", "error");
+        return;
+      }
+
+      const workerData = {
+        ...newContact,
+        age: newContact.age ? parseInt(newContact.age) : null,
+        salary: newContact.salary ? parseFloat(newContact.salary) : null,
+        joined_date: newContact.joined_date || new Date().toISOString().split('T')[0]
+      };
+
+      const response = await addWorker(workerData);
+      
+      if (response?.data) {
+        setRefreshTrigger(prev => prev + 1);
+        handleCloseAdd();
+        showSnackbar("Employé ajouté avec succès");
+      }
+    } catch (e) {
+      console.error("Erreur ajout:", e);
+      showSnackbar(e.message || "Erreur lors de l'ajout", "error");
+    }
   };
 
-  const handleDeleteContact = () => {
-   
-    handleCloseDelete();
+  const handleUpdateContact = async () => {
+    try {
+      if (!selectedContact) return;
+
+      if (!selectedContact.full_name || !selectedContact.email || !selectedContact.phone || !selectedContact.cin) {
+        showSnackbar("Veuillez remplir tous les champs obligatoires", "error");
+        return;
+      }
+
+      const workerData = {
+        ...selectedContact,
+        age: selectedContact.age ? parseInt(selectedContact.age) : null,
+        salary: selectedContact.salary ? parseFloat(selectedContact.salary) : null
+      };
+
+      const response = await updateWorker(selectedContact.id, workerData);
+      
+      if (response?.data) {
+        setRefreshTrigger(prev => prev + 1);
+        handleCloseUpdate();
+        showSnackbar("Employé mis à jour avec succès");
+      }
+    } catch (e) {
+      console.error("Erreur mise à jour:", e);
+      showSnackbar(e.message || "Erreur lors de la mise à jour", "error");
+    }
   };
 
-  const columns = [
-    { field: "registrarId", headerName: "Registrar Id", width: 100 },
-    {
-      field: "name",
-      headerName: "Name",
-      cellClassName: "name-column--cell",
-      width: 200,
-    },
-    {
-      field: "age",
-      headerName: "Age",
-      type: "number",
-      headerAlign: "left",
-      align: "left",
-      width: 100,
-    },
-    { field: "phone", headerName: "Phone Number", width: 100 },
-    { field: "email", headerName: "Email", width: 200 },
-    { field: "address", headerName: "Addresse", width: 250 },
-    { field: "city", headerName: "City", width: 100 },
-    { field: "date", headerName: "Date d'athésion", width: 100 },
-    { field: "zipCode", headerName: "carte CIN", width: 100 },
-    { field: "salaire", headerName: "salaire", width: 100 },
-    {
-      field: "actions",
-      headerName: "Actions",
-      width: 150,
-      renderCell: (params) => (
-        <>
-          <IconButton
-            onClick={() => handleClickOpenUpdate(params.row)}
-            color="primary"
-          >
-            <EditIcon />
-          </IconButton>
-          <IconButton
-            onClick={() => handleClickOpenDelete(params.row.id)}
-            color="secondary"
-          >
-            <DeleteIcon />
-          </IconButton>
-        </>
-      ),
-    },
-  ];
+  const handleDeleteContact = async () => {
+    try {
+      if (!selectedContact) return;
+
+      const response = await deleteWorker(selectedContact);
+      
+      if (response?.status === 200) {
+        setRefreshTrigger(prev => prev + 1);
+        handleCloseDelete();
+        showSnackbar("Employé supprimé avec succès");
+      }
+    } catch (e) {
+      console.error("Erreur suppression:", e);
+      showSnackbar(e.message || "Erreur lors de la suppression", "error");
+    }
+  };
+
+  if (loading) {
+    return (
+      <MyProSidebarProvider>
+        <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
+          <CircularProgress />
+        </Box>
+      </MyProSidebarProvider>
+    );
+  }
+
+  if (error) {
+    return (
+      <MyProSidebarProvider>
+        <Box m="20px">
+          <Alert severity="error">
+            Erreur lors du chargement des données: {error}
+          </Alert>
+        </Box>
+      </MyProSidebarProvider>
+    );
+  }
 
   return (
     <MyProSidebarProvider>
@@ -153,7 +271,7 @@ const Contacts = () => {
           <Topbar />
           <Box m="20px">
             <Box display="flex" justifyContent="space-between" alignItems="center">
-              <Header title="USER" subtitle="Welcome " />
+              <Header title="UTILISATEURS" subtitle="Gestion des employés" />
               <Button
                 variant="contained"
                 startIcon={<AddIcon />}
@@ -163,7 +281,7 @@ const Contacts = () => {
                   "&:hover": { backgroundColor: colors.blueAccent[800] },
                 }}
               >
-                Ajouter un nouveau personne
+                Ajouter un employé
               </Button>
             </Box>
             <Box
@@ -171,15 +289,9 @@ const Contacts = () => {
               width="100%"
               height="80vh"
               sx={{
-                "& .MuiDataGrid-root": {
-                  border: "none",
-                },
-                "& .MuiDataGrid-cell": {
-                  borderBottom: "none",
-                },
-                "& .name-column--cell": {
-                  color: colors.greenAccent[300],
-                },
+                "& .MuiDataGrid-root": { border: "none" },
+                "& .MuiDataGrid-cell": { borderBottom: "none" },
+                "& .name-column--cell": { color: colors.greenAccent[300] },
                 "& .MuiDataGrid-columnHeaders": {
                   backgroundColor: colors.blueAccent[700],
                   borderBottom: "none",
@@ -203,204 +315,312 @@ const Contacts = () => {
                 rows={rows}
                 columns={columns}
                 components={{ Toolbar: GridToolbar }}
+                pageSize={10}
+                rowsPerPageOptions={[5, 10, 20]}
+                disableSelectionOnClick
+                getRowId={(row) => row.id}
               />
             </Box>
           </Box>
         </main>
 
-        {/* Popup pour ajouter un nouveau contact */}
-        <Dialog open={openAdd} onClose={handleCloseAdd}>
-          <DialogTitle>Ajouter un nouveau personne</DialogTitle>
+        {/* Dialogue Ajout */}
+        <Dialog open={openAdd} onClose={handleCloseAdd} fullWidth maxWidth="md">
+          <DialogTitle>Ajouter un nouvel employé</DialogTitle>
           <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              name="name"
-              label="Nom"
-              fullWidth
-              value={newContact.name}
-              onChange={handleInputChange}
-            />
-            <TextField
-              margin="dense"
-              name="email"
-              label="Email"
-              fullWidth
-              value={newContact.email}
-              onChange={handleInputChange}
-            />
-            <TextField
-              margin="dense"
-              name="age"
-              label="Âge"
-              type="number"
-              fullWidth
-              value={newContact.age}
-              onChange={handleInputChange}
-            />
-            <TextField
-              margin="dense"
-              name="phone"
-              label="Téléphone"
-              fullWidth
-              value={newContact.phone}
-              onChange={handleInputChange}
-            />
-            <TextField
-              margin="dense"
-              name="address"
-              label="Adresse"
-              fullWidth
-              value={newContact.address}
-              onChange={handleInputChange}
-            />
-            <TextField
-              margin="dense"
-              name="city"
-              label="Ville"
-              fullWidth
-              value={newContact.city}
-              onChange={handleInputChange}
-            />
-            <TextField
-              margin="dense"
-              name="zipCode"
-              label="carte CIN"
-              fullWidth
-              value={newContact.zipCode}
-              onChange={handleInputChange}
-            />
-            <TextField
-              margin="dense"
-              name="date"
-              label="Date d'athésion"
-              fullWidth
-              value={newContact.date}
-              onChange={handleInputChange}
-            />
-            <TextField
-              margin="dense"
-              name="salaire"
-              label="Salaire"
-              fullWidth
-              value={newContact.salaire}
-              onChange={handleInputChange}
-            />
+            <Grid container spacing={2} sx={{ mt: 1 }}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  autoFocus
+                  margin="normal"
+                  name="full_name"
+                  label="Nom complet *"
+                  fullWidth
+                  value={newContact.full_name}
+                  onChange={handleInputChange}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  margin="normal"
+                  name="email"
+                  label="Email *"
+                  type="email"
+                  fullWidth
+                  value={newContact.email}
+                  onChange={handleInputChange}
+                  required
+                />
+              </Grid>
+              <Grid item xs={6} sm={3}>
+                <TextField
+                  margin="normal"
+                  name="age"
+                  label="Âge"
+                  type="number"
+                  fullWidth
+                  value={newContact.age}
+                  onChange={handleInputChange}
+                  inputProps={{ min: 18, max: 99 }}
+                />
+              </Grid>
+              <Grid item xs={6} sm={3}>
+                <TextField
+                  margin="normal"
+                  name="phone"
+                  label="Téléphone *"
+                  fullWidth
+                  value={newContact.phone}
+                  onChange={handleInputChange}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  margin="normal"
+                  name="cin"
+                  label="CIN *"
+                  fullWidth
+                  value={newContact.cin}
+                  onChange={handleInputChange}
+                  required
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  margin="normal"
+                  name="address"
+                  label="Adresse"
+                  fullWidth
+                  multiline
+                  rows={2}
+                  value={newContact.address}
+                  onChange={handleInputChange}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  margin="normal"
+                  name="joined_date"
+                  label="Date d'adhésion"
+                  type="date"
+                  fullWidth
+                  value={newContact.joined_date}
+                  onChange={handleInputChange}
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  margin="normal"
+                  name="salary"
+                  label="Salaire (€)"
+                  type="number"
+                  fullWidth
+                  value={newContact.salary}
+                  onChange={handleInputChange}
+                  InputProps={{
+                    inputProps: { min: 0, step: 0.01 },
+                    endAdornment: "€"
+                  }}
+                />
+              </Grid>
+            </Grid>
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseAdd} color="secondary">
               Annuler
             </Button>
-            <Button onClick={handleAddContact} color="primary">
+            <Button 
+              onClick={handleAddContact}
+              color="primary"
+              variant="contained"
+            >
               Ajouter
             </Button>
           </DialogActions>
         </Dialog>
 
-        {/* Popup pour mettre à jour un contact */}
-        <Dialog open={openUpdate} onClose={handleCloseUpdate}>
-          <DialogTitle>Mettre à jour le contact</DialogTitle>
+        {/* Dialogue Modification */}
+        <Dialog open={openUpdate} onClose={handleCloseUpdate} fullWidth maxWidth="md">
+          <DialogTitle>Modifier l'employé</DialogTitle>
           <DialogContent>
-            <TextField
-              autoFocus
-              margin="dense"
-              name="name"
-              label="Nom"
-              fullWidth
-              value={selectedContact ? selectedContact.name : ""}
-              onChange={(e) => setSelectedContact({ ...selectedContact, name: e.target.value })}
-            />
-            <TextField
-              margin="dense"
-              name="email"
-              label="Email"
-              fullWidth
-              value={selectedContact ? selectedContact.email : ""}
-              onChange={(e) => setSelectedContact({ ...selectedContact, email: e.target.value })}
-            />
-            <TextField
-              margin="dense"
-              name="age"
-              label="Âge"
-              type="number"
-              fullWidth
-              value={selectedContact ? selectedContact.age : ""}
-              onChange={(e) => setSelectedContact({ ...selectedContact, age: e.target.value })}
-            />
-            <TextField
-              margin="dense"
-              name="phone"
-              label="Téléphone"
-              fullWidth
-              value={selectedContact ? selectedContact.phone : ""}
-              onChange={(e) => setSelectedContact({ ...selectedContact, phone: e.target.value })}
-            />
-            <TextField
-              margin="dense"
-              name="address"
-              label="Adresse"
-              fullWidth
-              value={selectedContact ? selectedContact.address : ""}
-              onChange={(e) => setSelectedContact({ ...selectedContact, address: e.target.value })}
-            />
-            <TextField
-              margin="dense"
-              name="city"
-              label="Ville"
-              fullWidth
-              value={selectedContact ? selectedContact.city : ""}
-              onChange={(e) => setSelectedContact({ ...selectedContact, city: e.target.value })}
-            />
-            <TextField
-              margin="dense"
-              name="zipCode"
-              label="carte CIN"
-              fullWidth
-              value={selectedContact ? selectedContact.zipCode : ""}
-              onChange={(e) => setSelectedContact({ ...selectedContact, zipCode: e.target.value })}
-            />
-            <TextField
-              margin="dense"
-              name="date"
-              label="Date d'athésion"
-              fullWidth
-              value={selectedContact ? selectedContact.date : ""}
-              onChange={(e) => setSelectedContact({ ...selectedContact, date: e.target.value })}
-            />
-            <TextField
-              margin="dense"
-              name="salaire"
-              label="Salaire"
-              fullWidth
-              value={selectedContact ? selectedContact.salaire : ""}
-              onChange={(e) => setSelectedContact({ ...selectedContact, salaire: e.target.value })}
-            />
+            {selectedContact && (
+              <Grid container spacing={2} sx={{ mt: 1 }}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    autoFocus
+                    margin="normal"
+                    name="full_name"
+                    label="Nom complet *"
+                    fullWidth
+                    value={selectedContact.full_name}
+                    onChange={(e) => setSelectedContact({
+                      ...selectedContact,
+                      full_name: e.target.value
+                    })}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    margin="normal"
+                    name="email"
+                    label="Email *"
+                    type="email"
+                    fullWidth
+                    value={selectedContact.email}
+                    onChange={(e) => setSelectedContact({
+                      ...selectedContact,
+                      email: e.target.value
+                    })}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={6} sm={3}>
+                  <TextField
+                    margin="normal"
+                    name="age"
+                    label="Âge"
+                    type="number"
+                    fullWidth
+                    value={selectedContact.age}
+                    onChange={(e) => setSelectedContact({
+                      ...selectedContact,
+                      age: e.target.value
+                    })}
+                    inputProps={{ min: 18, max: 99 }}
+                  />
+                </Grid>
+                <Grid item xs={6} sm={3}>
+                  <TextField
+                    margin="normal"
+                    name="phone"
+                    label="Téléphone *"
+                    fullWidth
+                    value={selectedContact.phone}
+                    onChange={(e) => setSelectedContact({
+                      ...selectedContact,
+                      phone: e.target.value
+                    })}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    margin="normal"
+                    name="cin"
+                    label="CIN *"
+                    fullWidth
+                    value={selectedContact.cin}
+                    onChange={(e) => setSelectedContact({
+                      ...selectedContact,
+                      cin: e.target.value
+                    })}
+                    required
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    margin="normal"
+                    name="address"
+                    label="Adresse"
+                    fullWidth
+                    multiline
+                    rows={2}
+                    value={selectedContact.address}
+                    onChange={(e) => setSelectedContact({
+                      ...selectedContact,
+                      address: e.target.value
+                    })}
+                  />
+                </Grid>
+                <Grid item xs={6}>
+                  <TextField
+                    margin="normal"
+                    name="joined_date"
+                    label="Date d'adhésion"
+                    type="date"
+                    fullWidth
+                    value={selectedContact.joined_date}
+                    onChange={(e) => setSelectedContact({
+                      ...selectedContact,
+                      joined_date: e.target.value
+                    })}
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField
+                    margin="normal"
+                    name="salary"
+                    label="Salaire (€)"
+                    type="number"
+                    fullWidth
+                    value={selectedContact.salary}
+                    onChange={(e) => setSelectedContact({
+                      ...selectedContact,
+                      salary: e.target.value
+                    })}
+                    InputProps={{
+                      inputProps: { min: 0, step: 0.01 },
+                      endAdornment: "€"
+                    }}
+                  />
+                </Grid>
+              </Grid>
+            )}
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseUpdate} color="secondary">
               Annuler
             </Button>
-            <Button onClick={handleUpdateContact} color="primary">
+            <Button 
+              onClick={handleUpdateContact}
+              color="primary"
+              variant="contained"
+            >
               Mettre à jour
             </Button>
           </DialogActions>
         </Dialog>
 
-        {/* Popup de confirmation pour la suppression */}
+        {/* Dialogue Suppression */}
         <Dialog open={openDelete} onClose={handleCloseDelete}>
           <DialogTitle>Confirmer la suppression</DialogTitle>
           <DialogContent>
-            Êtes-vous sûr de vouloir supprimer ce contact ?
+            Êtes-vous sûr de vouloir supprimer cet employé ? Cette action est irréversible.
           </DialogContent>
           <DialogActions>
             <Button onClick={handleCloseDelete} color="primary">
               Annuler
             </Button>
-            <Button onClick={handleDeleteContact} color="secondary">
+            <Button 
+              onClick={handleDeleteContact} 
+              color="error"
+              variant="contained"
+            >
               Supprimer
             </Button>
           </DialogActions>
         </Dialog>
+
+        {/* Snackbar pour les notifications */}
+        <Snackbar
+          open={snackbar.open}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        >
+          <Alert 
+            onClose={handleCloseSnackbar} 
+            severity={snackbar.severity}
+            sx={{ width: '100%' }}
+          >
+            {snackbar.message}
+          </Alert>
+        </Snackbar>
       </div>
     </MyProSidebarProvider>
   );
