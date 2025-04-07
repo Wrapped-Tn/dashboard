@@ -121,7 +121,7 @@ export const getTotalBrand = async ()=> {
                         try {
                           console.log("Données envoyées:", workerData);
                           const response = await axios.post(PORT + "/workers/addWorker", workerData);
-                          if (response.status >= 200 && response.status < 300) {
+                          if (response.status === 201) {
                             return response.data;
                           }
                           console.error("Erreur lors de l'ajout:", response.status);
@@ -151,7 +151,7 @@ export const getTotalBrand = async ()=> {
                         try {
                           const response = await axios.delete(`${PORT}/workers/delWorker/${id}`);
                           if (response.status === 200) {
-                            return response.data;
+                            return response;
                           }
                           console.error('Erreur lors de la suppression:', response.status);
                           return null;
@@ -187,3 +187,4 @@ export const getTotalBrand = async ()=> {
                           throw e;
                         }
                       };
+                      

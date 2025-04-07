@@ -44,6 +44,7 @@ import FAQL from "./LivraisonManager/pages/faq";
 import GeographyL from "./LivraisonManager/pages/geography";
 import Demande from "./pages/Demande"
 
+import LoginPage from "./components/login/login";
 const App = () => {
   const [theme, colorMode] = useMode();
   return (
@@ -52,7 +53,8 @@ const App = () => {
         <CssBaseline />
         
               <Routes>
-                <Route path="/" element={<Dashboard />} />
+                <Route path="/" element={<LoginPage />} />
+                <Route path="/Dashboard" element={<Dashboard />} />
                 <Route path="/team" element={<Team />} />
                 <Route path="/contacts" element={<Contacts />} />
                 <Route path="/invoices" element={<Invoices />} />

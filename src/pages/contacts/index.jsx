@@ -23,6 +23,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
 import { getUser, addWorker, updateWorker, deleteWorker } from "../../APIcons/admin/apisAdmin";
+import { MenuItem } from '@mui/material';
 
 const Contacts = () => {
   const theme = useTheme();
@@ -40,7 +41,8 @@ const Contacts = () => {
     address: "",
     cin: "",
     joined_date: "",
-    salary: ""
+    salary: "",
+    role: ""
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -57,6 +59,8 @@ const Contacts = () => {
       const data = await getUser();
       if (data) {
         setRows(data);
+        console.log("Data:", data);
+        
       }
     } catch (err) {
       setError(err.message);
@@ -86,6 +90,7 @@ const Contacts = () => {
     { field: "email", headerName: "Email", width: 250 },
     { field: "address", headerName: "Adresse", width: 200 },
     { field: "cin", headerName: "CIN", width: 150 },
+    { field: "role", headerName: "Role", width: 150 },
     { 
       field: "joined_date", 
       headerName: "Date d'adhésion", 
@@ -123,7 +128,8 @@ const Contacts = () => {
           </IconButton>
         </>
       ),
-    },
+    },    
+
   ], []);
 
   const handleClickOpenAdd = () => setOpenAdd(true);
@@ -151,7 +157,8 @@ const Contacts = () => {
       address: "",
       cin: "",
       joined_date: "",
-      salary: ""
+      salary: "",
+      role: ""
     });
   };
 
@@ -172,7 +179,7 @@ const Contacts = () => {
 
   const handleAddContact = async () => {
     try {
-      if (!newContact.full_name || !newContact.email || !newContact.phone || !newContact.cin) {
+      if (!newContact.full_name || !newContact.email || !newContact.phone || !newContact.cin || !newContact.role) {
         showSnackbar("Veuillez remplir tous les champs obligatoires", "error");
         return;
       }
@@ -185,8 +192,9 @@ const Contacts = () => {
       };
 
       const response = await addWorker(workerData);
+      console.log("Response ajout:", response);
       
-      if (response?.data) {
+      if (response.success) {
         setRefreshTrigger(prev => prev + 1);
         handleCloseAdd();
         showSnackbar("Employé ajouté avec succès");
@@ -411,6 +419,22 @@ const Contacts = () => {
                   InputLabelProps={{ shrink: true }}
                 />
               </Grid>
+              <Grid item xs={6}>
+                <TextField
+                  select
+                  margin="normal"
+                  name="role"
+                  label="Rôle *"
+                  fullWidth
+                  value={newContact.role || ''}
+                  onChange={handleInputChange}
+                  required
+                >
+                  <MenuItem value="Admin">Admin</MenuItem>
+                  <MenuItem value="Manager Livraison">Manager Livraison</MenuItem>
+                  <MenuItem value="Manager Finance">Manager Finance</MenuItem>
+                </TextField>
+              </Grid>
               <Grid item xs={12}>
                 <TextField
                   margin="normal"
@@ -442,170 +466,6 @@ const Contacts = () => {
           </DialogActions>
         </Dialog>
 
-        {/* Dialogue Modification */}
-        <Dialog open={openUpdate} onClose={handleCloseUpdate} fullWidth maxWidth="md">
-          <DialogTitle>Modifier l'employé</DialogTitle>
-          <DialogContent>
-            {selectedContact && (
-              <Grid container spacing={2} sx={{ mt: 1 }}>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    autoFocus
-                    margin="normal"
-                    name="full_name"
-                    label="Nom complet *"
-                    fullWidth
-                    value={selectedContact.full_name}
-                    onChange={(e) => setSelectedContact({
-                      ...selectedContact,
-                      full_name: e.target.value
-                    })}
-                    required
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    margin="normal"
-                    name="email"
-                    label="Email *"
-                    type="email"
-                    fullWidth
-                    value={selectedContact.email}
-                    onChange={(e) => setSelectedContact({
-                      ...selectedContact,
-                      email: e.target.value
-                    })}
-                    required
-                  />
-                </Grid>
-                <Grid item xs={6} sm={3}>
-                  <TextField
-                    margin="normal"
-                    name="age"
-                    label="Âge"
-                    type="number"
-                    fullWidth
-                    value={selectedContact.age}
-                    onChange={(e) => setSelectedContact({
-                      ...selectedContact,
-                      age: e.target.value
-                    })}
-                    inputProps={{ min: 18, max: 99 }}
-                  />
-                </Grid>
-                <Grid item xs={6} sm={3}>
-                  <TextField
-                    margin="normal"
-                    name="phone"
-                    label="Téléphone *"
-                    fullWidth
-                    value={selectedContact.phone}
-                    onChange={(e) => setSelectedContact({
-                      ...selectedContact,
-                      phone: e.target.value
-                    })}
-                    required
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    margin="normal"
-                    name="cin"
-                    label="CIN *"
-                    fullWidth
-                    value={selectedContact.cin}
-                    onChange={(e) => setSelectedContact({
-                      ...selectedContact,
-                      cin: e.target.value
-                    })}
-                    required
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    margin="normal"
-                    name="address"
-                    label="Adresse"
-                    fullWidth
-                    multiline
-                    rows={2}
-                    value={selectedContact.address}
-                    onChange={(e) => setSelectedContact({
-                      ...selectedContact,
-                      address: e.target.value
-                    })}
-                  />
-                </Grid>
-                <Grid item xs={6}>
-                  <TextField
-                    margin="normal"
-                    name="joined_date"
-                    label="Date d'adhésion"
-                    type="date"
-                    fullWidth
-                    value={selectedContact.joined_date}
-                    onChange={(e) => setSelectedContact({
-                      ...selectedContact,
-                      joined_date: e.target.value
-                    })}
-                    InputLabelProps={{ shrink: true }}
-                  />
-                </Grid>
-                <Grid item xs={12}>
-                  <TextField
-                    margin="normal"
-                    name="salary"
-                    label="Salaire (€)"
-                    type="number"
-                    fullWidth
-                    value={selectedContact.salary}
-                    onChange={(e) => setSelectedContact({
-                      ...selectedContact,
-                      salary: e.target.value
-                    })}
-                    InputProps={{
-                      inputProps: { min: 0, step: 0.01 },
-                      endAdornment: "€"
-                    }}
-                  />
-                </Grid>
-              </Grid>
-            )}
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseUpdate} color="secondary">
-              Annuler
-            </Button>
-            <Button 
-              onClick={handleUpdateContact}
-              color="primary"
-              variant="contained"
-            >
-              Mettre à jour
-            </Button>
-          </DialogActions>
-        </Dialog>
-
-        {/* Dialogue Suppression */}
-        <Dialog open={openDelete} onClose={handleCloseDelete}>
-          <DialogTitle>Confirmer la suppression</DialogTitle>
-          <DialogContent>
-            Êtes-vous sûr de vouloir supprimer cet employé ? Cette action est irréversible.
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseDelete} color="primary">
-              Annuler
-            </Button>
-            <Button 
-              onClick={handleDeleteContact} 
-              color="error"
-              variant="contained"
-            >
-              Supprimer
-            </Button>
-          </DialogActions>
-        </Dialog>
-
         {/* Snackbar pour les notifications */}
         <Snackbar
           open={snackbar.open}
@@ -621,6 +481,26 @@ const Contacts = () => {
             {snackbar.message}
           </Alert>
         </Snackbar>
+        {openDelete && (
+          <Dialog open={openDelete} onClose={handleCloseDelete}>
+            <DialogTitle>Supprimer l'employé</DialogTitle>
+            <DialogContent>
+              Êtes-vous sûr de vouloir supprimer cet employé ?
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleCloseDelete} color="secondary">
+                Annuler
+              </Button>
+              <Button 
+                onClick={handleDeleteContact}
+                color="error"
+                variant="contained"
+              >
+                Supprimer
+              </Button>
+            </DialogActions>
+          </Dialog>
+        )}
       </div>
     </MyProSidebarProvider>
   );
