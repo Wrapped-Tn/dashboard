@@ -25,14 +25,17 @@ import StatBox from "../../components/StatBox";
 import ProgressCircle from "../../components/ProgressCircle";
 import ProgressCircle2 from "../../components/ProgressCircle2";
 import { MyProSidebarProvider } from "../global/sidebar/sidebarContext";
-import { getTotalUser } from "../../APIcons/admin/apisAdmin";
-import { getTotalSels } from "../../APIcons/admin/apisAdmin";
-import { getTotalBrand } from "../../APIcons/admin/apisAdmin";
+import { getTotalUser } from "../../APIcons/admin/apiDashboard";
+import { getTotalSels } from "../../APIcons/admin/apiDashboard";
+import { getTotalBrand } from "../../APIcons/admin/apiDashboard";
 import { statLine } from "../../APIcons/admin/apisAdmin";
-import { statRadar } from "../../APIcons/admin/apisAdmin"
+import { statRadar } from "../../APIcons/admin/apiDashboard"
+import { getTotalTransaction } from "../../APIcons/admin/apiDashboard"
+
 import Topbar from "../global/Topbar";
 import { useState, useEffect } from "react";
 
+import {formatDate} from "../global/Globale Functions/functions";
 
 const Dashboard = () => {
   const theme = useTheme();
@@ -52,8 +55,38 @@ const Dashboard = () => {
       timestamp: null
     };
   })
+  const [statTrans,setStatTrans ] = useState ([]);
+  const [roleTrans,setRoleTrans ] = useState ('user');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  useEffect(() => {
+    console.log('roleTrans', roleTrans);
+  
+    const fetchData2 = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+  
+        const data4 = await getTotalTransaction(roleTrans);
+        console.log('here data4', data4);
+  
+        if (data4 !== undefined) {
+          setStatTrans(data4);
+        } else {
+          setError("Aucune donnée reçue");
+        }
+      } catch (e) {
+        setError("Erreur lors de la récupération des données");
+        console.error(e);
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    fetchData2(); // appel ici, en dehors de la déclaration
+  }, [roleTrans]);
+  
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,8 +98,7 @@ const Dashboard = () => {
         const data2 = await getTotalSels();
         const data3 =await getTotalBrand()
         const dataLine = await statRadar()
-
-        
+         
         
         if (data !== undefined) setTotalUser(data);
         if (data2 !== undefined) setTotalsel(data2);
@@ -105,8 +137,10 @@ const Dashboard = () => {
 
   const changeDat = (data) => {
     if (data === "brand") {
+      setRoleTrans('brand')
       setDataaff(mockTransactionBrand);
     } else if (data === "user") {
+      setRoleTrans('user')
       setDataaff(mockTransactions);
     } else {
       setDataaff([]);
@@ -355,27 +389,41 @@ const Dashboard = () => {
                       </Box>
                     </Typography>
                   </Box>
-                  {dataaff.map((transaction, i) => (
-                    <Box
-                      key={`${transaction.txId}-${i}`}
-                      display="flex"
-                      justifyContent="space-between"
-                      alignItems="center"
-                      borderBottom={`4px solid ${colors.primary[500]}`}
-                      p="15px"
-                    >
-                      <Box>
-                        <Typography variant="h5" fontWeight="600" color={colors.greenAccent[100]}>
-                          {transaction.txId}
-                        </Typography>
-                        <Typography color={colors.grey[100]}>{transaction.user}</Typography>
-                      </Box>
-                      <Box color={colors.grey[100]}>{transaction.date}</Box>
-                      <Box color={colors.greenAccent[500]} p="5px 10px" borderRadius="4px">
-                        ${transaction.cost}
-                      </Box>
-                    </Box>
-                  ))}
+                  {statTrans?.stats && statTrans.stats.length > 0 ? (
+                    statTrans.stats.map((transaction, i) => {
+                      // Trouver le nom complet de l'utilisateur en fonction de l'ID de l'utilisateur
+                      const user = statTrans.userName.find(user => user.id === transaction.user_id);
+                      
+                      return (
+                        <Box
+                          key={`${transaction.id}-${i}`}  // Utilise transaction.id directement
+                          display="flex"
+                          justifyContent="space-between"
+                          alignItems="center"
+                          borderBottom={`4px solid ${colors.primary[500]}`}
+                          p="15px"
+                        >
+                          <Box>
+                            <Typography variant="h5" fontWeight="600" color={colors.greenAccent[100]}>
+                              {transaction.id}  {/* Affiche l'ID de la transaction */}
+                            </Typography>
+                            <Typography color={colors.grey[100]}>
+                              {/* Affiche le nom complet de l'utilisateur si trouvé */}
+                              {user ? user.full_name : 'Nom inconnu'}
+                            </Typography>
+                          </Box>
+                          <Box color={colors.grey[100]}>
+                            {formatDate(transaction.updatedAt)}  {/* Formater la date */}
+                          </Box>
+                          <Box color={colors.greenAccent[500]} p="5px 10px" borderRadius="4px">
+                            ${transaction.total_price}  {/* Affiche le total de la transaction */}
+                          </Box>
+                        </Box>
+                      );
+                    })
+                  ) : (
+                    <Typography>Aucune transaction trouvée.</Typography> // Affiche un message si pas de données
+                  )}
                 </Box>
               </Grid>
             </Grid>

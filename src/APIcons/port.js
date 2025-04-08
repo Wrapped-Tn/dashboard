@@ -1,2 +1,2 @@
-const PORT = 'http://localhost:3002/api'
+const PORT = 'http://localhost:4000/api'
 export {PORT}

@@ -107,3 +107,19 @@ export const getTotalUser = async ()=> {
                 console.log(e);  
             }
             }
+            export const getTotalTransaction = async (query) => {
+                try {
+                    console.log('Query:', query);
+                  const response = await axios.get(`${PORT}/adminDash/stats4?role=${query}`);
+              
+                  if (response.status === 200) {
+                    return response.data;
+                  } else {
+                    console.warn('Unexpected response status:', response.status);
+                    return null;
+                  }
+                } catch (e) {
+                  console.error('Erreur dans getTotalTransaction:', e);
+                  return null; // <-- important pour éviter "undefined"
+                }
+              };
