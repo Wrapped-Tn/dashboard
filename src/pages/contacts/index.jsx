@@ -22,7 +22,7 @@ import Header from "../../components/Header";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import AddIcon from "@mui/icons-material/Add";
-import { getUser, addWorker, updateWorker, deleteWorker } from "../../APIcons/admin/apisAdmin";
+import { getUser, addWorker, updateWorker, deleteWorker } from "../../APIcons/admin/apiUser";
 import { MenuItem } from '@mui/material';
 
 const Contacts = () => {
