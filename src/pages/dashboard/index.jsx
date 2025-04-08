@@ -56,7 +56,7 @@ const Dashboard = () => {
     };
   })
   const [statTrans,setStatTrans ] = useState ([]);
-  const [roleTrans,setRoleTrans ] = useState ('user');
+  const [roleTrans,setRoleTrans ] = useState ('brand');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   

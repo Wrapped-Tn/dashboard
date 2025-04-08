@@ -1,10 +1,9 @@
-import React, { useState } from "react";
-import { Box, useTheme, Typography, IconButton, MenuItem, Select } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Box, useTheme, MenuItem, Select } from "@mui/material";
 import { DataGrid, GridToolbar } from "@mui/x-data-grid";
 import { tokens } from "../../theme";
-import { mockDemendeBrand } from "../../data/mockData";
-import { mockDemendeUser } from "../../data/mockData";
 import { MyProSidebarProvider } from "../global/sidebar/sidebarContext";
+import { getDemande } from "../../APIcons/admin/apiDemande"; // Assurez-vous que l'API fonctionne bien
 import Topbar from "../global/Topbar";
 import Header from "../../components/Header";
 
@@ -12,44 +11,54 @@ const Contacts = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  const [dataaff, setDataaff] = useState(mockDemendeUser);
+  // États locaux pour gérer les données
+  const [dataaff, setDataaff] = useState([]);  // Les données de demandes
+  const [loading, setLoading] = useState(true);  // Pour gérer l'état de chargement
+  const [error, setError] = useState(null);  // Pour gérer les erreurs
+  const [roleDemande, setRoleDemande] = useState("user");  // Le rôle sélectionné pour filtrer
 
-  const changeDat = (data) => {
-    console.log(data);
+  // Fonction pour récupérer les données
+  const fetchData = async (role) => {
+    try {
+      const response = await getDemande(role);
 
-    if (data === "USER") {
-      setDataaff(mockDemendeUser);
-    } else if (data === "BRAND") {
-      setDataaff(mockDemendeBrand);
-    } else {
-      setDataaff([]); // Optionnel: vider les données si aucune option valide n'est sélectionnée
+      if (!response || response.length === 0) {
+        // Si la réponse est vide ou invalide
+        console.error("Aucune donnée reçue de l'API");
+        setDataaff([]);  // Vider les données si rien n'est récupéré
+      } else {
+        console.log(response);  // Afficher la réponse pour débogage
+        setDataaff(response);   // Mettre à jour l'état des données
+      }
+      setLoading(false);  // Désactiver le chargement
+    } catch (error) {
+      console.error("Erreur lors de la récupération des données:", error);
+      setError(error);  // Gérer l'erreur
+      setLoading(false); // Désactiver le chargement
     }
   };
 
+  useEffect(() => {
+    fetchData(roleDemande);  // Appel initial à l'API
+  }, [roleDemande]);  // L'API sera appelée chaque fois que `roleDemande` change
+
+  // Gérer le changement de rôle (USER/BRAND)
+  const handleRoleChange = (e) => {
+    setRoleDemande(e.target.value);
+  };
+
+  // Colonnes pour le DataGrid
   const columns = [
-    { field: "id", headerName: "Id" },
-    {
-      field: "name",
-      headerName: "Name",
-      width: 200,
-      cellClassName: "name-column--cell",
-    },
+    { field: "idDemand", headerName: "ID" },
+    { field: "name", headerName: "Name", width: 200 },
     { field: "email", headerName: "Email", width: 200 },
-    { field: "phone", headerName: "Phone Number", width: 100 },
-    { field: "date", headerName: "Date", width: 100 },
-    {
-      field: "cost",
-      headerName: "Cost",
-      width: 100,
-    },
-    {
-      field: "RIB",
-      headerName: "RIB",
-      width: 200,
-    },
-    { field: "Status", headerName: "Status", width: 100 },
+    { field: "phoneNumber", headerName: "Phone Number", width: 150 },
+    { field: "date", headerName: "Date", width: 150 },
+    { field: "cost", headerName: "Cost", width: 100 },
+    { field: "status", headerName: "Status", width: 120 },
   ];
 
+  // Affichage des données dans le DataGrid
   return (
     <MyProSidebarProvider>
       <div style={{ height: "100%", width: "100%" }}>
@@ -57,7 +66,7 @@ const Contacts = () => {
           <Topbar />
           <Box m="20px">
             <Box display="flex" justifyContent="space-between" alignItems="center">
-              <Header title="DEMENDE" subtitle="Welcome" />
+              <Header title="DEMANDES" subtitle="Welcome" />
               <Select
                 sx={{
                   backgroundColor: "transparent",
@@ -76,13 +85,11 @@ const Contacts = () => {
                     borderColor: "transparent", // Empêcher la bordure d'apparaître au focus
                   },
                 }}
-                defaultValue="USER"
-                onChange={(e) => {
-                  changeDat(e.target.value);
-                }}
+                value={roleDemande}
+                onChange={handleRoleChange}
               >
-                <MenuItem value="USER">USER</MenuItem>
-                <MenuItem value="BRAND">BRAND</MenuItem>
+                <MenuItem value="user">USER</MenuItem>
+                <MenuItem value="brand">BRAND</MenuItem>
               </Select>
             </Box>
             <Box
@@ -119,9 +126,11 @@ const Contacts = () => {
               }}
             >
               <DataGrid
-                rows={dataaff}
+                rows={dataaff || []}  // Gestion de données null/undefined
                 columns={columns}
+                loading={loading}
                 components={{ Toolbar: GridToolbar }}
+                getRowId={(row) => row.idDemand} // Assurez-vous que l'ID est unique pour chaque ligne
               />
             </Box>
           </Box>
