@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   useTheme,
@@ -19,26 +19,57 @@ import { mockDemendeUser } from "../../../data/mockData";
 import { MyProSidebarProviderF } from "../global/sidebar/sidebarContextF";
 import Topbar from "../global/Topbar";
 import Header from "../../../components/Header";
+import { getDemande,updateDemande,deleteDemande } from "../../../APIcons/financier/apiDemande"; // Assurez-vous que l'API fonctionne bien
 
 const Contacts = () => {
   const theme = useTheme();
   const colors = tokens(theme.palette.mode);
 
-  const [dataaff, setDataaff] = useState(mockDemendeUser);
+  const [dataaff, setDataaff] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null); // Ligne sélectionnée pour la mise à jour
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false); // État pour la boîte de dialogue de confirmation
   const [newStatus, setNewStatus] = useState(""); // Nouveau statut sélectionné
+  const [loading, setLoading] = useState(true);  // Pour gérer l'état de chargement
+  const [error, setError] = useState(null);  // Pour gérer les erreurs
+  const [roleDemande, setRoleDemande] = useState("user");  // Le rôle sélectionné pour filtrer
 
   // Fonction pour changer les données affichées
   const changeDat = (data) => {
-    if (data === "USER") {
-      setDataaff(mockDemendeUser);
-    } else if (data === "BRAND") {
-      setDataaff(mockDemendeBrand);
+    if (data === "user") {
+      setRoleDemande(data);
+    } else if (data === "brand") {
+      setRoleDemande(data);
     } else {
-      setDataaff([]); // Optionnel: vider les données si aucune option valide n'est sélectionnée
+      setRoleDemande([]); // Optionnel: vider les données si aucune option valide n'est sélectionnée
     }
   };
+
+ // Fonction pour récupérer les données
+  const fetchData = async (role) => {
+    try {
+      const response = await getDemande(role);
+
+      if (!response || response.length === 0) {
+        // Si la réponse est vide ou invalide
+        console.error("Aucune donnée reçue de l'API");
+        setDataaff([]);  // Vider les données si rien n'est récupéré
+      } else {
+        console.log(response);  // Afficher la réponse pour débogage
+        setDataaff(response);   // Mettre à jour l'état des données
+      }
+      setLoading(false);  // Désactiver le chargement
+    } catch (error) {
+      console.error("Erreur lors de la récupération des données:", error);
+      setError(error);  // Gérer l'erreur
+      setLoading(false); // Désactiver le chargement
+    }
+  };
+
+  useEffect(() => {
+    fetchData(roleDemande);  // Appel initial à l'API
+  }, [roleDemande]);  // L'API sera appelée chaque fois que `roleDemande` change
+
+
 
   // Fonction pour ouvrir la boîte de dialogue de confirmation
   const handleOpenConfirmDialog = (row, status) => {
@@ -66,19 +97,19 @@ const Contacts = () => {
   };
 
   const columns = [
-    { field: "id", headerName: "ID" },
+    { field: "idDemand", headerName: "ID" },
     {
       field: "name",
       headerName: "Nom",
-      width: 200,
+      width: 100,
       cellClassName: "name-column--cell",
     },
     { field: "email", headerName: "Email", width: 200 },
-    { field: "phone", headerName: "Téléphone", width: 100 },
-    { field: "date", headerName: "Date", width: 100 },
+    { field: "phoneNumber", headerName: "Téléphone", width: 100 },
+    { field: "date", headerName: "Date", width: 130 },
     { field: "cost", headerName: "Coût", width: 100 },
-    { field: "RIB", headerName: "RIB", width: 200 },
-    { field: "Status", headerName: "Statut", width: 100 },
+    { field: "rib", headerName: "RIB", width: 200 },
+    { field: "status", headerName: "Statut", width: 100 },
     {
       field: "actions",
       headerName: "Actions",
@@ -140,11 +171,11 @@ const Contacts = () => {
                     borderColor: "transparent",
                   },
                 }}
-                defaultValue="USER"
+                defaultValue={roleDemande}
                 onChange={(e) => changeDat(e.target.value)}
               >
-                <MenuItem value="USER">UTILISATEUR</MenuItem>
-                <MenuItem value="BRAND">MARQUE</MenuItem>
+                <MenuItem value="user">UTILISATEUR</MenuItem>
+                <MenuItem value="brand">MARQUE</MenuItem>
               </Select>
             </Box>
             <Box
@@ -184,6 +215,8 @@ const Contacts = () => {
                 rows={dataaff}
                 columns={columns}
                 components={{ Toolbar: GridToolbar }}
+                getRowId={(row) => row.idDemand} // Assurez-vous que l'ID est unique pour chaque ligne
+
               />
             </Box>
           </Box>

@@ -4,9 +4,11 @@ import {PORT} from "../port"
 
 export const getDemande = async (query)=> {
     try {
-    const response= await axios.get(PORT+"/admin/demand/getAll?q="+query)
+    const response= await axios.get(PORT+"/financeManager/demand/getAll?q="+query)
     console.log(response.data);
     if(response.status==200){
+        console.log(response.data);
+        
         return response.data
     }else{
         console.log(response.status);
@@ -19,7 +21,7 @@ export const getDemande = async (query)=> {
 
 export const updateDemande = async (id, demandeData) => {
     try {
-        const response = await axios.put(PORT + "/admin/demand/update:"+id ,{demandeData });
+        const response = await axios.put(PORT + "/financeManager/demand/update:"+id ,{demandeData });
         if (response.status === 200) {
             return response.data;
         }
@@ -33,7 +35,7 @@ export const updateDemande = async (id, demandeData) => {
 }
 export const deleteDemande = async (id) => {
     try {
-        const response = await axios.delete(`${PORT}/admin/demand/delete/${id}`);
+        const response = await axios.delete(`${PORT}/financeManager/demand/delete/${id}`);
         if (response.status === 200) {
             return response;
         }
