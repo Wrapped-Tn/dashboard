@@ -1,9 +1,27 @@
 import axios from "axios"
 import {PORT} from "../port"
 
+const getAuthHeaders = () => {
+  try {
+    const userData = JSON.parse(localStorage.getItem("userData"));
+    if (userData?.token) {
+      return {
+        headers: {
+          Authorization: `Bearer ${userData.token}`
+        }
+      };
+    }
+    console.warn("Token non trouvé dans localStorage.");
+    return {};
+  } catch (error) {
+    console.error("Erreur lors de la récupération du token :", error);
+    return {};
+  }
+};
+
 export const getUser = async ()=> {
     try {
-    const response= await axios.get(PORT+"/workers/getAllWorkers")
+    const response= await axios.get(PORT+"/admin/workers/", getAuthHeaders())
     console.log(response.data);
     if(response.status==200){
         return response.data

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './login.css';
-
+import {SignIn} from '../../APIcons/Auth'
 const LoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -28,27 +28,27 @@ const LoginPage = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!validateForm()) return;
 
-    setLoading(true);
-    try {
-      // Simulation d'une requête API
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Stockage du token (simulé)
-      localStorage.setItem('authToken', 'simulated-token');
-      
-      // Notification simulée
-      //alert('Connexion réussie !');
-      navigate('/Dashboard');
-    } catch (error) {
+  setLoading(true);
+  try {
+    const userData = await SignIn(formData.username, formData.password);
+    console.log(userData);
+    
+    if (userData && userData.token) {
+      navigate('/Dashboard'); // ✅ Navigation ici
+    } else {
       alert('Identifiants incorrects');
-    } finally {
-      setLoading(false);
     }
-  };
+  } catch (error) {
+    alert('Erreur lors de la connexion');
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="login-container">

@@ -47,6 +47,7 @@ const Dashboard = () => {
   const [totalSel, setTotalsel ] = useState({ totalSales: 0, percentageChange: 0 });
   const [brand, setBrand ] = useState({ totalBrands: 0, percentageChange: 0 });
   const[periode , setPeriode]=useState('day')
+
   const [statLin,setStatLin ] = useState (() => {
     const savedData = localStorage.getItem('deliveryStats');
     return savedData ? JSON.parse(savedData) : { 
@@ -59,6 +60,10 @@ const Dashboard = () => {
   const [roleTrans,setRoleTrans ] = useState ('brand');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  const token = localStorage.getItem("userData")
+  console.log('totalUser is here :',totalUser);
+  
   
   useEffect(() => {
     console.log('roleTrans', roleTrans);
@@ -95,6 +100,8 @@ const Dashboard = () => {
         setError(null);
         
         const data = await getTotalUser();
+        console.log('totalUser Data:',data);
+        
         const data2 = await getTotalSels();
         const data3 =await getTotalBrand()
         const dataLine = await statRadar()
